@@ -1,0 +1,6 @@
+@MiningVehicle_HostAddress = http://localhost:5140
+
+GET {{MiningVehicle_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
