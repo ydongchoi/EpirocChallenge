@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6E9C0D9C-DB5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningVehicle", "src\MiningVehicle\MiningVehicle.csproj", "{DCA84688-96B8-4796-95CF-35CB9C2F935E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{95F243EB-8834-4369-8076-9033C78F4D60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningVehicle.UnitTests", "tests\MiningVehicle.UnitTests\MiningVehicle.UnitTests.csproj", "{127E6193-6C91-4D56-BB95-BDACACCE6F37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,13 @@ Global
 		{DCA84688-96B8-4796-95CF-35CB9C2F935E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCA84688-96B8-4796-95CF-35CB9C2F935E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCA84688-96B8-4796-95CF-35CB9C2F935E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{127E6193-6C91-4D56-BB95-BDACACCE6F37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{127E6193-6C91-4D56-BB95-BDACACCE6F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{127E6193-6C91-4D56-BB95-BDACACCE6F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{127E6193-6C91-4D56-BB95-BDACACCE6F37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DCA84688-96B8-4796-95CF-35CB9C2F935E} = {6E9C0D9C-DB55-4A47-AFEC-EDD61EDF7967}
+		{127E6193-6C91-4D56-BB95-BDACACCE6F37} = {95F243EB-8834-4369-8076-9033C78F4D60}
 	EndGlobalSection
 EndGlobal
