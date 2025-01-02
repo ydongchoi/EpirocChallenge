@@ -1,22 +1,35 @@
+using MiningVehicle.API.Services;
 using MiningVehicle.Extensions;
+using MiningVehicle.Infrastructure.Repositories;
+using MiningVehicle.SignalR.VehicleHub;
 using MiningVehicle.VehicleEmulator;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuration
 
-// Services
+// API
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+
+// Vehicle Emulator
+builder.Services.AddSingleton<IMiningVehicleClient, MiningVehicleClient>();
 builder.Services.AddMiningVehicle(builder.Configuration);
 
-// Test
-var serviceProvider = builder.Services.BuildServiceProvider();
-var miningVehicleEmulator = serviceProvider.GetService<MinigVehicleEmulator>();
-miningVehicleEmulator.StartEngine();
+// Hubs
+builder.Services.AddSignalR();
+builder.Services.AddSignalRClients();
 
+// Infrastructure
+builder.Services.AddMongoDatabase(builder.Configuration);
+builder.Services.AddScoped<IRepository, VehicleDataRepository>();
+
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.MapHub<VehicleDataHub>("/vehicleDataHub");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -27,4 +40,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapControllers();
 app.Run();
+
+
