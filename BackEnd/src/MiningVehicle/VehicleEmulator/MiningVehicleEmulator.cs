@@ -1,5 +1,6 @@
 using System.Timers;
 using MiningVehicle.VehicleEmulator.Components;
+using MiningVehicle.VehicleEmulator.Models;
 
 namespace MiningVehicle.VehicleEmulator{
     public sealed class MinigVehicleEmulator: IMiningVehicleEmulator, IDisposable{
@@ -7,50 +8,91 @@ namespace MiningVehicle.VehicleEmulator{
     // Components
     private Battery _battery;
     private Motor _motor;
+
+    // SignalR
+    private IMiningVehicleClient _miningVehicleClient;
+
     private int _speed;
     private System.Timers.Timer _timer;
 
-    public MinigVehicleEmulator(Battery battery, Motor motor){
+    public MinigVehicleEmulator(Battery battery, Motor motor, IMiningVehicleClient miningVehicleClient){
         _battery = battery;        
         _motor = motor;
+
+        _miningVehicleClient = miningVehicleClient;
+        _miningVehicleClient.ConnectAsync().Wait();
 
         _timer = new System.Timers.Timer(100);
         _timer.Elapsed += OnTimedEvent;
     }
 
     public void StartEngine(){
+        _timer.Start();
+
         Console.WriteLine("Checking battery status...");
         _battery.CheckBatteryStatus();
 
         Console.WriteLine("Checking motor status...");
         _motor.CheckMotorStatus();
 
-        Console.WriteLine("Condition check passed, starting the engine...");
+        Console.WriteLine("Condition check passed, starting the engine...\n");
         _motor.StartMotor();        
         
-        _timer.Start();
+        var vehicleData = GetVehicleData();
+        _miningVehicleClient.SendVehicleDataAsync(vehicleData).Wait();
     }    
 
     public void StopEngine(){
-        Console.WriteLine("Stopping the engine...");
+        Console.WriteLine("Stopping the engine...\n");
         _motor.StopMotor();
     }
 
-    public void AdjustSpeed(int speed){
-        Console.WriteLine($"Adjusting speed to {speed}...");
+    public async Task AdjustSpeed(int speed){
+        Console.WriteLine($"Adjusting speed to {speed}...\n");
         _speed = speed;
         _motor.AdjustSpeed(speed);
         _battery.CheckCurrentBattery();
+
+        var vehicleData = GetVehicleData();
+        _miningVehicleClient.SendVehicleDataAsync(vehicleData).Wait();
     }
 
     public void Break(){
-        Console.WriteLine("Breaking...");
+        Console.WriteLine("Breaking...\n");
         _motor.StopMotor();
     }
 
     public void ChargeBattery(){
-        Console.WriteLine("Charging battery...");
+        Console.WriteLine("Charging battery...\n");
         _battery.ChargeBattery();
+    }
+
+    private VehicleData GetVehicleData(){
+
+        var batteryData = new BatteryData{
+            Capacity = _battery.Capacity,
+            Charge = _battery.Charge,
+            ChargingRate = _battery.ChargingRate,
+            Efficiency = _battery.Efficiency,
+            Status = _battery.Status,
+            Temperature = _battery.Temperature
+        };
+
+        var motorData = new MotorData{
+            GearRatio = _motor.GearRatio,
+            Status = _motor.Status,
+            Speed = _motor.Speed,
+            Rpm = _motor.Rpm
+        };
+
+
+        var vehicleData = new VehicleData{
+            Timestamp = DateTime.Now,
+            BatteryData = batteryData,
+            MotorData = motorData
+        };
+
+        return vehicleData;
     }
 
     private void OnTimedEvent(object? source, ElapsedEventArgs e)

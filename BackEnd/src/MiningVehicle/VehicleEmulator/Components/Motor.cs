@@ -40,11 +40,6 @@ namespace MiningVehicle.VehicleEmulator.Components
             GearRatio = (double)_motorConfiguration.MotorRotation / _motorConfiguration.WheelRotation;
             Rpm = _motorConfiguration.Rpm;
             Status = MotorStatus.Off;
-
-            Console.WriteLine("Motor is created");
-            Console.WriteLine($"Motor Gear Ratio: {GearRatio}");
-            Console.WriteLine($"Motor RPM: {Rpm}");
-            Console.WriteLine($"Motor Status: {Status}");
         }
 
         public void CheckMotorStatus()
@@ -59,7 +54,7 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void StartMotor()
         {
-            Console.WriteLine("Starting motor...");
+            Console.WriteLine("Starting motor...\n");
             Status = MotorStatus.Idle;
         }
 
@@ -93,6 +88,11 @@ namespace MiningVehicle.VehicleEmulator.Components
         /// </summary>
         private double CalculatePower(int speed)
         {
+            if(Rpm == 0)
+            {
+                return 0;
+            }
+
             double angularVelocity = (2 * Math.PI * Rpm) / 60;
             double power = Lerp(0, 10000 * speed, 0.1);
             double torque = power / angularVelocity;
@@ -110,13 +110,13 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void StopMotor()
         {
-            Console.WriteLine("Stopping motor...");
+            Console.WriteLine("Stopping motor...\n");
             Status = MotorStatus.Off;
         }
 
         private void WarnMotor()
         {
-            Console.WriteLine("Motor is in warning state");
+            Console.WriteLine("Motor is in warning state\n");
             Status = MotorStatus.Warning;
         }
     }
