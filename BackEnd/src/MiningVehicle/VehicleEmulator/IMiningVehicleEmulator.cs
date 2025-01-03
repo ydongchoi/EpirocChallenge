@@ -7,6 +7,6 @@ namespace MiningVehicle.VehicleEmulator
         public Task AdjustSpeed(int speed);
         public void Break();
         
-        public void ChargeBattery();
+        public Task ChargeBattery();
     }
 }

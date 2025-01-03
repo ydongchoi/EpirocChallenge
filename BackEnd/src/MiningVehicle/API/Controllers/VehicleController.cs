@@ -20,9 +20,16 @@ namespace MiningVehicle.API.Controller
         [HttpPost("adjustSpeed")]
         public async Task<IActionResult> AdjustSpeed([FromBody] AdjustSpeedDTO adjustSpeedDTO)
         {
-            await _vehicleService.AdjustSpeed(adjustSpeedDTO.Speed);
+            try
+            {
+                await _vehicleService.AdjustSpeed(adjustSpeedDTO.Speed);
 
-            return Ok($"Speed adjusted to {adjustSpeedDTO.Speed}");
+                return Ok($"Speed adjusted to {adjustSpeedDTO.Speed}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("break")]
@@ -31,11 +38,19 @@ namespace MiningVehicle.API.Controller
             return Ok();
         }
 
-        [HttpPost("chargeBattery")]
+        [HttpGet("chargeBattery")]
         public IActionResult ChargeBattery()
         {
+            try
+            {
+                _vehicleService.ChargeBattery();
 
-            return Ok();
+                return Ok("Battery is charging");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
