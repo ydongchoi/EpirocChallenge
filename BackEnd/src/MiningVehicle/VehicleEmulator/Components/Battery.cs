@@ -15,8 +15,10 @@ namespace MiningVehicle.VehicleEmulator.Components
         public double ChargingRate { get; private set; }
         public double Efficiency { get; private set; }
         public double Percentage => Charge / Capacity;
+        public double Power{ get; private set; }
         public BatteryStatus Status { get; private set; }
         public double Temperature { get; private set; }
+
 
         // Constructor
         public Battery(IOptions<BatteryConfiguration> batteryConfigurationOptions)
@@ -30,15 +32,6 @@ namespace MiningVehicle.VehicleEmulator.Components
             Efficiency = _batteryConfiguration.Efficiency;
             Status = BatteryStatus.Off;
             Temperature = _batteryConfiguration.Temperature;
-
-            Console.WriteLine("Battery is created");
-            Console.WriteLine($"Battery Capacity: {Capacity}");
-            Console.WriteLine($"Battery Charge: {Charge}");
-            Console.WriteLine($"Battery ChargingRate: {ChargingRate}");
-            Console.WriteLine($"Battery Efficiency: {Efficiency}");
-            Console.WriteLine($"Battery Status: {Status}");
-            Console.WriteLine($"Battery Temperature: {Temperature}");
-            Console.WriteLine($"Battery Percentage: {Percentage}");
         }
 
         // Methods
@@ -47,22 +40,23 @@ namespace MiningVehicle.VehicleEmulator.Components
             if (Percentage < 0.2)
             {
                 Status = BatteryStatus.Warning;
-                Console.WriteLine("Battery is low and in warning state");
+                Console.WriteLine("Battery is low and in warning state\n");
             }
             if (Percentage < 0.01)
             {
                 Status = BatteryStatus.Off;
-                throw new Exception("Battery is empty and needs to be charged");
+                throw new Exception("Battery is empty and needs to be charged\n");
             }
 
-            Console.WriteLine("Battery is OK");
+            Console.WriteLine("Battery is OK\n");
             return true;
         }
 
         public void ChargeBattery()
         {
             Status = BatteryStatus.Charging;
-            Charge += (ChargingRate * Efficiency);
+            Power = - ChargingRate / Efficiency;
+            Charge -= Power;
             
             CheckCurrentBattery();
 
@@ -71,7 +65,7 @@ namespace MiningVehicle.VehicleEmulator.Components
                 Charge = Capacity;
                 Status = BatteryStatus.Full;
 
-                Console.WriteLine("Battery is full");
+                Console.WriteLine("Battery is full\n");
             }
         }
 
@@ -79,8 +73,8 @@ namespace MiningVehicle.VehicleEmulator.Components
         {
             Status = BatteryStatus.Discharging;
 
-            double power = discharge / Efficiency;
-            Charge -= (power);
+            Power = discharge / Efficiency;
+            Charge -= (Power) * 0.1;
 
             if (Charge < 0)
             {
@@ -95,9 +89,9 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void CheckCurrentBattery()
         {
-            Console.WriteLine($"Battery Charge: {Charge}, Battery Status: {Status}");
+            Console.WriteLine($"Battery Charge: {Charge}, Battery Status: {Status}, Power: {Power}");
             Console.WriteLine($"Battery Temperature: {Temperature}");
-            Console.WriteLine($"Battery Percentage: {Percentage}");
+            Console.WriteLine($"Battery Percentage: {Percentage * 100}%\n");
         }
 
         public void UpdateTemperature(double temperature)

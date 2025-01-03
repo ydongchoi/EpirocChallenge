@@ -14,7 +14,10 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         // Properties
         public double GearRatio { get; private set; } // 1:6 (motor:wheel)
-        public int Rpm { get; private set; } // 150 kW (about 200 horsepower)
+        public int NominalPower { get; private set; } 
+        public int NominalTorque { get; private set; } 
+        public double Power { get; private set; }
+        public int Rpm { get; private set; }
         public MotorStatus Status { get; private set; }
         private int speed;
         public int Speed // 0 -> 1 100rpm 10kw -> 2 200rpm 20kw -> 3 400rpm 30kw -> 4 800rpm 40kw per hour.
@@ -29,6 +32,7 @@ namespace MiningVehicle.VehicleEmulator.Components
                 speed = value;
             }
         }
+        
 
         public Motor(IOptions<MotorConfiguration> motorConfigurationOption, Battery battery)
         {
@@ -37,14 +41,11 @@ namespace MiningVehicle.VehicleEmulator.Components
 
             _battery = battery;
 
+            NominalPower = _motorConfiguration.NominalPower;
+            NominalTorque = _motorConfiguration.NominalTorque;
             GearRatio = (double)_motorConfiguration.MotorRotation / _motorConfiguration.WheelRotation;
-            Rpm = _motorConfiguration.Rpm;
+            Rpm = 0;
             Status = MotorStatus.Off;
-
-            Console.WriteLine("Motor is created");
-            Console.WriteLine($"Motor Gear Ratio: {GearRatio}");
-            Console.WriteLine($"Motor RPM: {Rpm}");
-            Console.WriteLine($"Motor Status: {Status}");
         }
 
         public void CheckMotorStatus()
@@ -59,7 +60,7 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void StartMotor()
         {
-            Console.WriteLine("Starting motor...");
+            Console.WriteLine("Starting motor...\n");
             Status = MotorStatus.Idle;
         }
 
@@ -71,10 +72,13 @@ namespace MiningVehicle.VehicleEmulator.Components
             int targetRpm = CalculateTargetRpm(speed);
             Rpm = (int)Lerp(Rpm, targetRpm, 0.1);
 
-            double power = CalculatePower(speed);
+            double power = CalculatePower();
             _battery.DischargeBattery(power);
 
-            Console.WriteLine($"Motor RPM: {Rpm}, Target RPM: {targetRpm} Power: {power}");
+            if(_battery.Status == BatteryStatus.Off){
+                StopMotor();
+                return;
+            }
         }
 
         /// <summary>
@@ -89,15 +93,18 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         /// <summary>
         /// Calculates the power required to maintain the given speed.
-        /// <paramref name="speed"/>The speed at which the vehicle is moving.</param>
         /// </summary>
-        private double CalculatePower(int speed)
+        private double CalculatePower()
         {
-            double angularVelocity = (2 * Math.PI * Rpm) / 60;
-            double power = Lerp(0, 10000 * speed, 0.1);
-            double torque = power / angularVelocity;
+            if(Rpm == 0)
+            {
+                return 0;
+            }
 
-            return Rpm * torque * (0.1 / 3600);
+            double angularVelocity = (2 * Math.PI * Rpm) / 60;
+            Power = angularVelocity * NominalTorque;
+
+            return Power;
         }
 
         private double Lerp(double current, double target, double t)
@@ -110,13 +117,13 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void StopMotor()
         {
-            Console.WriteLine("Stopping motor...");
+            Console.WriteLine("Stopping motor...\n");
             Status = MotorStatus.Off;
         }
 
         private void WarnMotor()
         {
-            Console.WriteLine("Motor is in warning state");
+            Console.WriteLine("Motor is in warning state\n");
             Status = MotorStatus.Warning;
         }
     }

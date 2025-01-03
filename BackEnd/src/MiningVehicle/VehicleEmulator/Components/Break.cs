@@ -1,4 +1,7 @@
-public enum Break{
-    On,
-    Off
+namespace MiningVehicle.VehicleEmulator.Components
+{
+    public enum BreakStatus{
+        On,
+        Off
+    }
 }

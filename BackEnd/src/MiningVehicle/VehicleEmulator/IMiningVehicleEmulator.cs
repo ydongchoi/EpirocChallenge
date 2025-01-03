@@ -4,9 +4,9 @@ namespace MiningVehicle.VehicleEmulator
         public void StartEngine();
         public void StopEngine();
 
-        public void AdjustSpeed(int speed);
+        public Task AdjustSpeed(int speed);
         public void Break();
         
-        public void ChargeBattery();
+        public Task ChargeBattery();
     }
 }
