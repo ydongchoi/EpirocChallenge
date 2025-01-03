@@ -18,10 +18,8 @@ namespace MiningVehicle.API.Services
             {
                 _miningVehicleEmulator.StartEngine();
             }
-            else
-            {
-                await _miningVehicleEmulator.AdjustSpeed(speed);
-            }
+            
+            await _miningVehicleEmulator.AdjustSpeed(speed);
         }
 
         public void Break()
