@@ -17,6 +17,7 @@ namespace MiningVehicle.VehicleEmulator.Models
         public double ChargingRate { get; set; }
         public double Efficiency { get; set; }
         public double Percentage { get; set; }
+        public double Power { get; set; }
         public BatteryStatus Status { get; set; }
         public double Temperature { get; set; }
     }

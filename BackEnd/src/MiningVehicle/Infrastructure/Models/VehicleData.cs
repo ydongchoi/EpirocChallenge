@@ -39,6 +39,12 @@ namespace MiningVehicle.Infrastructure.Models
 
         [BsonElement("efficiency")]
         public double Efficiency { get; set; }
+        
+        [BsonElement("percentage")]
+        public double Percentage { get; set; }
+        
+        [BsonElement("power")]
+        public double Power { get; set; }
 
         [BsonElement("temperature")]
         public double Temperature { get; set; }

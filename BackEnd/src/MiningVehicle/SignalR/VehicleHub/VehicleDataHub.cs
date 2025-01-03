@@ -26,6 +26,8 @@ namespace MiningVehicle.SignalR.VehicleHub
             Console.WriteLine($"Battery Charge: {vehicleData.BatteryData.Charge}");
             Console.WriteLine($"Battery Charging Rate: {vehicleData.BatteryData.ChargingRate}");
             Console.WriteLine($"Battery Efficiency: {vehicleData.BatteryData.Efficiency}");
+            Console.WriteLine($"Battery Percentage: {vehicleData.BatteryData.Percentage}");
+            Console.WriteLine($"Battery Power: {vehicleData.BatteryData.Power}");
             Console.WriteLine($"Battery Temperature: {vehicleData.BatteryData.Temperature}");
 
             // Save vehicle data to database
@@ -46,13 +48,23 @@ namespace MiningVehicle.SignalR.VehicleHub
                     Charge = vehicleData.BatteryData.Charge,
                     ChargingRate = vehicleData.BatteryData.ChargingRate,
                     Efficiency = vehicleData.BatteryData.Efficiency,
+                    Percentage = vehicleData.BatteryData.Percentage,
+                    Power = vehicleData.BatteryData.Power,                   
                     Temperature = vehicleData.BatteryData.Temperature
                 }
             };
-
+            
             await _vehicleDataRepository.AddVehicleDataAsync(vehicleDataInfrastructure);
 
+            // Send vehicle data to UI
+            await SendVehicleDataToUIAsync(vehicleData);
+
             await Clients.Caller.SendAsync("ReceiveVehicleData", vehicleData);
+        }
+
+        public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
+        {
+            await Clients.All.SendAsync("ReceiveVehicleDataAsync", vehicleData);
         }
     }
 }

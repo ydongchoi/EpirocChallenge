@@ -15,8 +15,10 @@ namespace MiningVehicle.VehicleEmulator.Components
         public double ChargingRate { get; private set; }
         public double Efficiency { get; private set; }
         public double Percentage => Charge / Capacity;
+        public double Power{ get; private set; }
         public BatteryStatus Status { get; private set; }
         public double Temperature { get; private set; }
+
 
         // Constructor
         public Battery(IOptions<BatteryConfiguration> batteryConfigurationOptions)
@@ -53,7 +55,8 @@ namespace MiningVehicle.VehicleEmulator.Components
         public void ChargeBattery()
         {
             Status = BatteryStatus.Charging;
-            Charge += (ChargingRate * Efficiency);
+            Power = - ChargingRate / Efficiency;
+            Charge -= Power;
             
             CheckCurrentBattery();
 
@@ -70,8 +73,8 @@ namespace MiningVehicle.VehicleEmulator.Components
         {
             Status = BatteryStatus.Discharging;
 
-            double power = discharge / Efficiency;
-            Charge -= (power);
+            Power = discharge / Efficiency;
+            Charge -= (Power) * 0.1;
 
             if (Charge < 0)
             {
@@ -86,7 +89,7 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void CheckCurrentBattery()
         {
-            Console.WriteLine($"Battery Charge: {Charge}, Battery Status: {Status}");
+            Console.WriteLine($"Battery Charge: {Charge}, Battery Status: {Status}, Power: {Power}");
             Console.WriteLine($"Battery Temperature: {Temperature}");
             Console.WriteLine($"Battery Percentage: {Percentage * 100}%\n");
         }
