@@ -9,6 +9,16 @@ namespace MiningVehicle.Extensions
 {
     public static class ServiceExtensions
     {
+        public static void ConfigureCors(this IServiceCollection services) => 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp", builder =>
+                builder.WithOrigins("http://localhost:5173") // React app URL
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            }); 
+
         public static IServiceCollection AddSignalRClients(this IServiceCollection services)
         {
             services.AddSingleton<HubConnection>(provider =>

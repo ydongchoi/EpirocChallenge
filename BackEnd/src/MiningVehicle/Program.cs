@@ -7,6 +7,7 @@ using MiningVehicle.VehicleEmulator;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuration
+builder.Services.ConfigureCors();
 
 // API
 builder.Services.AddScoped<IVehicleService, VehicleService>();
@@ -28,6 +29,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors("AllowReactApp");
 
 app.MapHub<VehicleDataHub>("/vehicleDataHub");
 
