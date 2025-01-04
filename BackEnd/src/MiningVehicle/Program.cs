@@ -43,10 +43,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapControllers();
     endpoints.MapHub<VehicleDataHub>("/vehicleDataHub");
 });
 
-app.MapControllers();
 app.Run();
 
 
