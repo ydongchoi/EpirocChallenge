@@ -80,7 +80,12 @@ const VehicleDataReceiver: React.FC = () => {
     const newConnection = new HubConnectionBuilder()
         .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`)
         .build();
-      
+    
+        console.log('newConnection: ', newConnection);
+        console.log(newConnection.baseUrl);
+        console.log(newConnection.connectionId);
+        console.log('signalRUrl: ', `https://mining-vehicle.azurewebsites.net/vehicleDataHub`);
+
     setConnection(newConnection);
   },[]);
 
@@ -91,7 +96,6 @@ const VehicleDataReceiver: React.FC = () => {
         connection.invoke('GetConnectionId').then((id: any) => {
           console.log('ConnectionId: ', id);
         });
-        
         console.log('Connection started');
         
         connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
