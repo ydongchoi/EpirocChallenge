@@ -30,7 +30,7 @@ function valuetext(value: number) {
 
 const requestCharging = async () => {
   try {
-    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/chargebattery`, {
+    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/chargeBattery`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -47,7 +47,8 @@ const requestCharging = async () => {
   }
 };
 
-const requestSpeed = async (speed: number) => {
+const requestSpeed = async (event: Event, speed: number) => {
+  console.log('event' + event);
   try {
     const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/adjustSpeed`, {
       method: 'POST',
@@ -76,34 +77,30 @@ const VehicleDataReceiver: React.FC = () => {
   const breakStatusMap = ['off', 'on'];
 
   useEffect(() => {
-    const connectToSignalR = async () => {
-      const newConnection = new HubConnectionBuilder()
+    const newConnection = new HubConnectionBuilder()
         .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`)
         .build();
+      
+    setConnection(newConnection);
+  },[]);
 
-      newConnection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
-        console.log('Received message: ', message.batteryData.power);
-        setMessages(message);
+  useEffect(() => {
+    if (connection) {
+      connection.start()
+      .then(() => {
+        connection.invoke('GetConnectionId').then((id: any) => {
+          console.log('ConnectionId: ', id);
+        });
+        
+        console.log('Connection started');
+        
+        connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
+          console.log('Received message: ', message.batteryData.power);
+          setMessages(message);
+        });
       });
-
-      try {
-        await newConnection.start();
-        console.log('Connected to SignalR Hub');
-      } catch (err) {
-        console.error('Error while starting connection: ', err);
-      }
-
-      setConnection(newConnection);
-    };
-
-    connectToSignalR();
-
-    return () => {
-      if (connection) {
-        connection.stop();
-      }
-    };
-  }, [connection]);
+    }
+  },[connection]);
 
   return (
     <div>
@@ -170,7 +167,7 @@ const VehicleDataReceiver: React.FC = () => {
                 min={-1}
                 max={4}
                 style={{ width: '100%' }}
-                onChange={(_, value) => requestSpeed(value as number)}
+                onChange={(event, value) => requestSpeed(event, value as number)}
               />
               </CardContent>
             </Card>
