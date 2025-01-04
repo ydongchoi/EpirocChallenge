@@ -23,9 +23,8 @@ namespace MiningVehicle.Extensions
         {
             services.AddSingleton<HubConnection>(provider =>
             {
-
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl(configuration["SignalRConfiguration:HubUrl"] ?? throw new ArgumentNullException("SignalRConfiguration:HubUrl"))
+                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub")
                     .WithAutomaticReconnect()
                     .Build();
 
