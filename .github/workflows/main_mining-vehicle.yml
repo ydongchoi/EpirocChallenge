@@ -22,10 +22,10 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build ./Backend/MiningVehicle.sln --configuration Release
+        run: dotnet build ./BackEnd/MiningVehicle.sln --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c ./Backend/src/MiningVehicle/MiningVehicle.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c ./BackEnd/src/MiningVehicle/MiningVehicle.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
