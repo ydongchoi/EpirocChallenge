@@ -19,7 +19,7 @@ namespace MiningVehicle.Extensions
                         ? "http://localhost:5173"
                         : "https://happy-river-0f3b0221e.4.azurestaticapps.net";
 
-                    builder.WithOrigins(reactAppUrl)
+                    builder.WithOrigins("https://happy-river-0f3b0221e.4.azurestaticapps.net")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
@@ -38,7 +38,7 @@ namespace MiningVehicle.Extensions
                 Console.WriteLine($"Hub URL: {hubUrl}");
 
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl(hubUrl)
+                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub")
                     .WithAutomaticReconnect()
                     .Build();
 
