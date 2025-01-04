@@ -13,15 +13,24 @@ const marks = [
   { value: 1, label: '1' },
   { value: 2, label: '2' },
   { value: 3, label: '3' },
+  { value: 4, label: '4' },
 ];
 
 function valuetext(value: number) {
   return `${value}`;
 }
 
+const apiUrl = process.env.NODE_ENV === 'production' 
+? process.env.REACT_APP_VEHICLE_API_URL_PROD 
+: process.env.REACT_APP_VEHICLE_API_URL_DEV;
+
+const signalRUrl = process.env.NODE_ENV === 'production'
+? process.env.REACT_APP_VEHICLE_SIGNALR_URL_PROD
+: process.env.REACT_APP_VEHICLE_SIGNALR_URL_DEV;
+
 const requestCharging = async () => {
   try {
-    const response = await fetch('https://mining-vehicle.azurewebsites.net/api/vehicle/chargebattery', {
+    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/chargebattery`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -38,6 +47,26 @@ const requestCharging = async () => {
   }
 };
 
+const requestSpeed = async (speed: number) => {
+  try {
+    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/adjustSpeed`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ speed }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching data: ', error);
+    throw error;
+  }
+}
+
 const VehicleDataReceiver: React.FC = () => {
   const [messages, setMessages] = useState<VehicleData>();
   const [connection, setConnection] = useState<any>(null);
@@ -49,7 +78,7 @@ const VehicleDataReceiver: React.FC = () => {
   useEffect(() => {
     const connectToSignalR = async () => {
       const newConnection = new HubConnectionBuilder()
-        .withUrl('https://mining-vehicle.azurewebsites.net/vehicleDataHub')
+        .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`)
         .build();
 
       newConnection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
@@ -133,7 +162,7 @@ const VehicleDataReceiver: React.FC = () => {
               <CardContent style={{ width: '90%' }}>
               <Slider
                 aria-label="Custom marks"
-                defaultValue={0}
+                defaultValue={-1}
                 getAriaValueText={valuetext}
                 step={1}
                 valueLabelDisplay="auto"
@@ -141,6 +170,7 @@ const VehicleDataReceiver: React.FC = () => {
                 min={-1}
                 max={4}
                 style={{ width: '100%' }}
+                onChange={(event, value) => requestSpeed(value as number)}
               />
               </CardContent>
             </Card>
