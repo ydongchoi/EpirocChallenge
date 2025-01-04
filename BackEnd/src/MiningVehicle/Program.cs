@@ -44,9 +44,6 @@ if (app.Environment.IsDevelopment())
 Console.WriteLine("Mapping SignalR Hub...");
 app.MapHub<VehicleDataHub>("/vehicleDataHub");
 
-Console.WriteLine("Mapping Controllers...");
-app.MapControllers();
-
 Console.WriteLine("Application pipeline configured. Running...");
 
 app.Run();
