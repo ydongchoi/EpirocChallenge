@@ -20,13 +20,13 @@ function valuetext(value: number) {
   return `${value}`;
 }
 
-const apiUrl = process.env.NODE_ENV === 'production' 
-? process.env.REACT_APP_VEHICLE_API_URL_PROD 
-: process.env.REACT_APP_VEHICLE_API_URL_DEV;
+// const apiUrl = process.env.NODE_ENV === 'production' 
+// ? process.env.REACT_APP_VEHICLE_API_URL_PROD 
+// : process.env.REACT_APP_VEHICLE_API_URL_DEV;
 
-const signalRUrl = process.env.NODE_ENV === 'production'
-? process.env.REACT_APP_VEHICLE_SIGNALR_URL_PROD
-: process.env.REACT_APP_VEHICLE_SIGNALR_URL_DEV;
+// const signalRUrl = process.env.NODE_ENV === 'production'
+// ? process.env.REACT_APP_VEHICLE_SIGNALR_URL_PROD
+// : process.env.REACT_APP_VEHICLE_SIGNALR_URL_DEV;
 
 const requestCharging = async () => {
   try {
@@ -170,7 +170,7 @@ const VehicleDataReceiver: React.FC = () => {
                 min={-1}
                 max={4}
                 style={{ width: '100%' }}
-                onChange={(event, value) => requestSpeed(value as number)}
+                onChange={(_, value) => requestSpeed(value as number)}
               />
               </CardContent>
             </Card>
