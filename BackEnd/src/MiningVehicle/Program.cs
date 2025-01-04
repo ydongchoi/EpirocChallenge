@@ -41,11 +41,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    endpoints.MapHub<VehicleDataHub>("/vehicleDataHub");
-});
+app.MapHub<VehicleDataHub>("/vehicleDataHub");
+app.MapControllers();
 
 app.Run();
 
