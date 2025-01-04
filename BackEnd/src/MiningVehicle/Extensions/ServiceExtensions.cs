@@ -38,7 +38,7 @@ namespace MiningVehicle.Extensions
                 Console.WriteLine($"Hub URL: {hubUrl}");
 
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub")
+                    .WithUrl(configuration["SignalR:ConnectionString"])
                     .WithAutomaticReconnect()
                     .Build();
 
