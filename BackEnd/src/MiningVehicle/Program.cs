@@ -17,7 +17,7 @@ builder.Services.AddSingleton<IMiningVehicleClient, MiningVehicleClient>();
 builder.Services.AddMiningVehicle(builder.Configuration);
 
 // Hubs
-builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration["SignalR:ConnectionString"]);
+builder.Services.AddSignalR().AddAzureSignalR(Environment.GetEnvironmentVariable("SignalRConnectionString"));
 // builder.Services.AddSignalR(e => {
 //     e.EnableDetailedErrors = true;
 //     e.MaximumReceiveMessageSize = 102400000;
