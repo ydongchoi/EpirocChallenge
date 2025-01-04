@@ -32,8 +32,6 @@ var app = builder.Build();
 
 app.UseCors("AllowReactApp");
 
-app.MapHub<VehicleDataHub>("/vehicleDataHub");
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -42,6 +40,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<VehicleDataHub>("/vehicleDataHub");
+});
 
 app.MapControllers();
 app.Run();
