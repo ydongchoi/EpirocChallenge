@@ -13,12 +13,6 @@ namespace MiningVehicle.SignalR.VehicleHub
             _vehicleDataRepository = vehicleDataRepository;
         }
 
-        public override async Task OnConnectedAsync()
-        {
-            await base.OnConnectedAsync();
-            await Clients.Caller.SendAsync("Connected", Context.ConnectionId);
-        }
-
         public string GetConnectionId()
         {
             return Context.ConnectionId;
