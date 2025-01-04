@@ -1,4 +1,3 @@
-import { Typography } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { Chart } from "react-google-charts";
 
@@ -30,7 +29,7 @@ const Gauge: React.FC<GaugeProps> = ({ id, value, title, min, max }) => {
     }, [value]);
 
     return (
-        <div style={styles.dial}>
+        <div id={id} style={styles.dial}>
             <Chart
                 height={300}
                 chartType="Gauge"

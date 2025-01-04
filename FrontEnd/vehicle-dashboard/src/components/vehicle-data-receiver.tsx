@@ -4,8 +4,7 @@ import { VehicleData } from '../models/vehicle-data.interface';
 import Gauge from './gauge';
 import BatteryGauge from 'react-battery-gauge';
 import { Indicator } from './indicator';
-import { AppBar, Toolbar, Typography, Grid, Slider, Card, CardContent, CardHeader, BottomNavigation, BottomNavigationAction } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
+import { AppBar, Toolbar, Typography, Box, Grid, Slider, Card, CardContent, CardHeader, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { Battery, Cog, Menu as MenuIcon, Omega, PlugZap } from 'lucide-react';
 
 const marks = [
@@ -22,7 +21,7 @@ function valuetext(value: number) {
 
 const requestCharging = async () => {
   try {
-    const response = await fetch('http://localhost:5140/api/vehicle/chargebattery', {
+    const response = await fetch('https://mining-vehicle.azurewebsites.net/api/vehicle/chargebattery', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -50,7 +49,7 @@ const VehicleDataReceiver: React.FC = () => {
   useEffect(() => {
     const connectToSignalR = async () => {
       const newConnection = new HubConnectionBuilder()
-        .withUrl('http://localhost:5140/vehicleDataHub')
+        .withUrl('https://mining-vehicle.azurewebsites.net/vehicleDataHub')
         .build();
 
       newConnection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {

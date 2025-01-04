@@ -1,6 +1,6 @@
-import React, { type FC } from 'react'
+import { type FC } from 'react'
 import { Battery, Lightbulb, Plug, CircleParking } from 'lucide-react'
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography } from '@mui/material'
 
 interface IndicatorProps {
     type: 'battery' | 'circleParking' | 'light' | 'power'
