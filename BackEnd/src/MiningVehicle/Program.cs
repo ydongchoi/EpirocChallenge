@@ -31,18 +31,24 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+
 app.UseRouting();
 app.UseCors("AllowReactApp");
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    Console.WriteLine("Development environment detected");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+Console.WriteLine("Mapping SignalR Hub...");
 app.MapHub<VehicleDataHub>("/vehicleDataHub");
+
+Console.WriteLine("Mapping Controllers...");
 app.MapControllers();
+
+Console.WriteLine("Application pipeline configured. Running...");
 
 app.Run();
 
