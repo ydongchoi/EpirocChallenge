@@ -29,6 +29,7 @@ namespace MiningVehicle.API.Services
 
         public void ChargeBattery()
         {
+            _miningVehicleEmulator.StopEngine();
             _miningVehicleEmulator.ChargeBattery();
         }
     }

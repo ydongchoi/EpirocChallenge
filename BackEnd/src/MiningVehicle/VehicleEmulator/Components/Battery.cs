@@ -69,9 +69,10 @@ namespace MiningVehicle.VehicleEmulator.Components
             }
         }
 
-        public void DischargeBattery(double discharge)
+        public void DischargeBattery(double discharge, MotorStatus motorStatus)
         {
-            Status = BatteryStatus.Discharging;
+            if(motorStatus == MotorStatus.Off) Status = BatteryStatus.Off;
+            else Status = BatteryStatus.Discharging;
 
             Power = discharge / Efficiency;
             Charge -= (Power) * 0.1;

@@ -65,15 +65,18 @@ namespace MiningVehicle.VehicleEmulator.Components
         }
 
         public void AdjustSpeed(int speed)
-        {
-            Status = MotorStatus.Running;
+        {   
+            if(speed == -1) Status = MotorStatus.Off;
+            else if(speed == 0) Status = MotorStatus.Idle;
+            else Status = MotorStatus.Running;
+            
             this.speed = speed;
 
             int targetRpm = CalculateTargetRpm(speed);
             Rpm = (int)Lerp(Rpm, targetRpm, 0.1);
 
             double power = CalculatePower();
-            _battery.DischargeBattery(power);
+            _battery.DischargeBattery(power, Status);
 
             if(_battery.Status == BatteryStatus.Off){
                 StopMotor();
@@ -118,6 +121,7 @@ namespace MiningVehicle.VehicleEmulator.Components
         public void StopMotor()
         {
             Console.WriteLine("Stopping motor...\n");
+            Rpm = 0;
             Status = MotorStatus.Off;
         }
 
