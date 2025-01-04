@@ -19,12 +19,13 @@ namespace MiningVehicle.Extensions
                 .AllowCredentials());
             }); 
 
-        public static IServiceCollection AddSignalRClients(this IServiceCollection services)
+        public static IServiceCollection AddSignalRClients(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<HubConnection>(provider =>
             {
+
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl("http://localhost:5140/vehicleDataHub")
+                    .WithUrl(configuration["SignalRConfiguration:HubUrl"] ?? throw new ArgumentNullException("SignalRConfiguration:HubUrl"))
                     .WithAutomaticReconnect()
                     .Build();
 

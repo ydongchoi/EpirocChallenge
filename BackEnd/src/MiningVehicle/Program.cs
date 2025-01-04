@@ -18,7 +18,7 @@ builder.Services.AddMiningVehicle(builder.Configuration);
 
 // Hubs
 builder.Services.AddSignalR();
-builder.Services.AddSignalRClients();
+builder.Services.AddSignalRClients(builder.Configuration);
 
 // Infrastructure
 builder.Services.AddMongoDatabase(builder.Configuration);
