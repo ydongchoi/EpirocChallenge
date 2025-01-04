@@ -78,7 +78,7 @@ const VehicleDataReceiver: React.FC = () => {
 
   useEffect(() => {
     const newConnection = new HubConnectionBuilder()
-        .withUrl(`https://epiroc-signalr.service.signalr.net/vehicleDataHub`)
+        .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`)
         .build();
     
         console.log('newConnection: ', newConnection);

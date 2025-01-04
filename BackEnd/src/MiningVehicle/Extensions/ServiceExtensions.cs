@@ -38,7 +38,7 @@ namespace MiningVehicle.Extensions
                 Console.WriteLine($"Hub URL: {hubUrl}");
 
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl("https://epiroc-signalr.service.signalr.net/vehicleDataHub")
+                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub")
                     .WithAutomaticReconnect()
                     .Build();
 
