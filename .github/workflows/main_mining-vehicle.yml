@@ -22,7 +22,7 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build ./Backend/MiningVehicle.sln --configuration Release
 
       - name: dotnet publish
         run: dotnet publish -c ./Backend/src/MiningVehicle/MiningVehicle.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
