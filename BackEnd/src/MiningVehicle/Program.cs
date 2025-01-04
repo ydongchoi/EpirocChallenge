@@ -30,10 +30,9 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
-
 app.UseRouting();
 app.UseCors("AllowReactApp");
+app.UseHttpsRedirection();
 
 if (app.Environment.IsDevelopment())
 {
