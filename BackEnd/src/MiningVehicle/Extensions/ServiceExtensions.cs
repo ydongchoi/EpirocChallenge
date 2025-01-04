@@ -42,6 +42,9 @@ namespace MiningVehicle.Extensions
                     .WithAutomaticReconnect()
                     .Build();
 
+                Console.WriteLine("Hub Connection:");
+                Console.WriteLine(hubConnection.ToString());
+
                 return hubConnection;
             });
 

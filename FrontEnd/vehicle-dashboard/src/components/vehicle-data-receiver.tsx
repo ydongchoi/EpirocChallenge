@@ -39,8 +39,6 @@ const requestCharging = async () => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data;
   } catch (error) {
     console.error('Error fetching data: ', error);
     throw error;
@@ -60,8 +58,6 @@ const requestSpeed = async (event: Event, speed: number) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data;
   } catch (error) {
     console.error('Error fetching data: ', error);
     throw error;
