@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using Microsoft.Extensions.Options;
 using MiningVehicle.Infrastructure.ConfigurationModels;
 using MongoDB.Driver;
@@ -14,8 +15,12 @@ namespace MiningVehicle.Infrastructure.Data
         {
             _mongoDbCongigurationOptions = mongoDBConfigurationOptions;
             _mongoDbConfiguration = _mongoDbCongigurationOptions.Value;
+            
+            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(_mongoDbConfiguration.ConnectionString));
+            settings.SslSettings = new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
+            var client = new MongoClient(settings);
 
-            var client = new MongoClient(_mongoDbConfiguration.ConnectionString);
+            //var client = new MongoClient(_mongoDbConfiguration.ConnectionString);
             _database = client.GetDatabase(_mongoDbConfiguration.Database);
         }
 
