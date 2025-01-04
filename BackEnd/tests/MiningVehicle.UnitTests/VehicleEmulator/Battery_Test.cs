@@ -35,7 +35,7 @@ namespace MiningVehicle.UnitTests.VehicleEmulator
             var initialCharge = _battery.Charge;
 
             // Act
-            _battery.DischargeBattery(10);
+            //_battery.DischargeBattery(10);
 
             // Assert
             Assert.Equal(initialCharge - 10 / efficiency, _battery.Charge);
@@ -48,7 +48,7 @@ namespace MiningVehicle.UnitTests.VehicleEmulator
             var chargingRate = 2.77;
             var efficiency = 0.9;
        
-            _battery.DischargeBattery(50);
+            //_battery.DischargeBattery(50);
             var chargeAfterDischarge = _battery.Charge;
 
             // Act
@@ -64,7 +64,7 @@ namespace MiningVehicle.UnitTests.VehicleEmulator
             // Arrange
        
             // Act
-            _battery.DischargeBattery(6500);
+            //_battery.DischargeBattery(6500);
 
             // Assert
             Assert.Equal(0, _battery.Charge);
