@@ -92,3 +92,7 @@ These specifications can be modified in the `appsettings.json` file to adjust th
 ## Deployment
 
 - **Cloud Provider**: Azure for hosting and managing the application
+- **Azure App Service**: Web App for API and SignalR Hub
+- **Azure Static Web Apps**: For hosting the React frontend
+- **Azure Cosmos DB**: For MongoDB account (Request Units)
+- **Azure SignalR**: For real-time communication
