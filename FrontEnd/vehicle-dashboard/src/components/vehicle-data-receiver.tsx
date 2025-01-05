@@ -109,16 +109,16 @@ const VehicleDataReceiver: React.FC = () => {
           console.log('Connection started');
         })
       .catch((error: any) => console.error('Connection failed: ', error));
-    }
-
-    connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
-      connection.invoke('GetConnectionId').then((id: any) => {
-        console.log('ConnectionId: ', id);
+    
+      connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
+        connection.invoke('GetConnectionId').then((id: any) => {
+          console.log('ConnectionId: ', id);
+        });
+  
+        console.log('Received message: ', message);
+        setMessages(message);
       });
-
-      console.log('Received message: ', message);
-      setMessages(message);
-    });
+    }
   }, [connection]);
 
   return (
