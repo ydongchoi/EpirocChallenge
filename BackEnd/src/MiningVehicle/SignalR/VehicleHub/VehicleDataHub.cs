@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Primitives;
 using MiningVehicle.Infrastructure.Repositories;
 using MiningVehicle.SignalR.VehicleHub.Models;
 
@@ -15,9 +16,23 @@ namespace MiningVehicle.SignalR.VehicleHub
             _connectionIds = new Dictionary<string, string>();
         }
 
+        public override async Task OnConnectedAsync()
+        {
+            var httpContext = Context.GetHttpContext();
+            if (httpContext != null)
+            {
+                var user = httpContext.Request.Query["user"];
+                string connectionId = Context.ConnectionId;
+
+                if (!string.IsNullOrEmpty(user.ToString()))
+                    _connectionIds.Add(user.ToString(), connectionId);
+            }
+
+            await base.OnConnectedAsync();
+        }
+
         public string GetConnectionId()
         {
-            _connectionIds.Add("React", Context.ConnectionId);
             return Context.ConnectionId;
         }
 
@@ -74,7 +89,8 @@ namespace MiningVehicle.SignalR.VehicleHub
 
         public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
         {   
-            var connectionId = _connectionIds["React"];
+            var connectionId = _connectionIds["react"];
+            Console.WriteLine($"Sending vehicle data to UI with connection ID: {connectionId}");
             await Clients.Client(connectionId).SendAsync("ReceiveVehicleDataAsync", vehicleData);
         }
     }
