@@ -23,7 +23,8 @@ namespace MiningVehicle.Extensions
                     builder.WithOrigins("https://happy-river-0f3b0221e.4.azurestaticapps.net")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
-                        .AllowCredentials();
+                        .AllowCredentials()
+                        .SetIsOriginAllowed((host) => true);
                 });
             });
 
