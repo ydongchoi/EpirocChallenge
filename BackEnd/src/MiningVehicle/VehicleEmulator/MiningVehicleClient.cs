@@ -29,8 +29,13 @@ namespace MiningVehicle.VehicleEmulator
         {
             try
             {
-                Console.WriteLine("Sending vehicle data...\n");
                 await _connection.InvokeAsync("SendVehicleDataAsync", vehicleData);
+
+                Console.WriteLine($"SendeD vehicle data... {vehicleData}\n");
+                _connection.On<DateTime>("Heartbeat", (time) =>
+                {
+                    Console.WriteLine($"Heartbeat received: {time}");
+                });
             }
             catch (Exception ex)
             {

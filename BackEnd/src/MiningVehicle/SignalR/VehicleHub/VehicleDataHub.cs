@@ -31,15 +31,6 @@ namespace MiningVehicle.SignalR.VehicleHub
             await base.OnConnectedAsync();
         }
 
-        public async Task SendHeartbeatAsync()
-        {
-            while (true)
-            {
-                await Task.Delay(20000);
-                await Clients.All.SendAsync("Heartbeat", DateTime.UtcNow);
-            }
-        }
-
         public string GetConnectionId()
         {
             return Context.ConnectionId;
@@ -47,6 +38,8 @@ namespace MiningVehicle.SignalR.VehicleHub
 
         public async Task SendVehicleDataAsync(VehicleData vehicleData)
         {   
+            await SendHeartbeatAsync();
+
             Console.WriteLine("Received vehicle data...");
             Console.WriteLine($"Timestamp: {vehicleData.Timestamp}");
             Console.WriteLine($"Status: {vehicleData.MotorData.Status}");
@@ -94,6 +87,11 @@ namespace MiningVehicle.SignalR.VehicleHub
             await _vehicleDataRepository.AddVehicleDataAsync(vehicleDataInfrastructure);
 
             await Clients.Caller.SendAsync("ReceiveVehicleData", vehicleData);
+        }
+
+        public async Task SendHeartbeatAsync()
+        {
+            await Clients.All.SendAsync("Heartbeat", DateTime.UtcNow);
         }
 
         public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
