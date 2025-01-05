@@ -27,7 +27,7 @@ builder.Services.AddSignalRClients(builder.Configuration);
 
 // Infrastructure
 builder.Services.AddMongoDatabase(builder.Configuration);
-builder.Services.AddScoped<IRepository, VehicleDataRepository>();
+builder.Services.AddSingleton<IRepository, VehicleDataRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
