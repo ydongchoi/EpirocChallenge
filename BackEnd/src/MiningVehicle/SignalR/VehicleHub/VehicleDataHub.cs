@@ -7,14 +7,17 @@ namespace MiningVehicle.SignalR.VehicleHub
     public class VehicleDataHub : Hub
     {
         private readonly IRepository _vehicleDataRepository;
+        private Dictionary<string, string> _connectionIds;
 
         public VehicleDataHub(IRepository vehicleDataRepository)
         {
             _vehicleDataRepository = vehicleDataRepository;
+            _connectionIds = new Dictionary<string, string>();
         }
 
         public string GetConnectionId()
         {
+            _connectionIds.Add("React", Context.ConnectionId);
             return Context.ConnectionId;
         }
 
@@ -71,7 +74,8 @@ namespace MiningVehicle.SignalR.VehicleHub
 
         public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
         {   
-            await Clients.All.SendAsync("ReceiveVehicleDataAsync", vehicleData);
+            var connectionId = _connectionIds["React"];
+            await Clients.Client(connectionId).SendAsync("ReceiveVehicleDataAsync", vehicleData);
         }
     }
 }
