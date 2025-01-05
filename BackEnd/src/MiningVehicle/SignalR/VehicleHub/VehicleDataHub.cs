@@ -80,13 +80,14 @@ namespace MiningVehicle.SignalR.VehicleHub
             };
 
             // Send vehicle data to UI
-            Console.WriteLine("Sending vehicle data to UI...");
             await SendVehicleDataToUIAsync(vehicleData);
-
-            Console.WriteLine("Saving vehicle data to database...");
+            Console.WriteLine("Sended vehicle data to UI...");
+          
             await _vehicleDataRepository.AddVehicleDataAsync(vehicleDataInfrastructure);
-
+            Console.WriteLine("Saved vehicle data to database...");
+       
             await Clients.Caller.SendAsync("ReceiveVehicleData", vehicleData);
+            Console.WriteLine("Sended vehicle data to caller...");
         }
 
         public async Task SendHeartbeatAsync()

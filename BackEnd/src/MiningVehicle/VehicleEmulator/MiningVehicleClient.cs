@@ -30,11 +30,11 @@ namespace MiningVehicle.VehicleEmulator
             try
             {
                 await _connection.InvokeAsync("SendVehicleDataAsync", vehicleData);
+                Console.WriteLine($"Sended vehicle data...");
 
-                Console.WriteLine($"SendeD vehicle data... {vehicleData}\n");
-                _connection.On<DateTime>("Heartbeat", (time) =>
+                _connection.On<VehicleData>("ReceiveVehicleData", (vehicleData) =>
                 {
-                    Console.WriteLine($"Heartbeat received: {time}");
+                    Console.WriteLine($"Recevied From Client Successfully: {vehicleData}");
                 });
             }
             catch (Exception ex)
