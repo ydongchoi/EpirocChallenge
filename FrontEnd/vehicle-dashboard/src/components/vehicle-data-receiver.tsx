@@ -74,23 +74,8 @@ const VehicleDataReceiver: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const negotiateResponse = await fetch(`https://mining-vehicle.azurewebsites.net/vehicleDataHub/negotiate`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      if (!negotiateResponse.ok) {
-        throw new Error(`HTTP error! status: ${negotiateResponse.status}`);
-      }
-
-      const negotiateData = await negotiateResponse.json();
-      const accessToken = negotiateData.accessToken;
-
-      console.log("negotiated");
-
       const newConnection = new HubConnectionBuilder()
         .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`, {
-          accessTokenFactory: () => accessToken,
           skipNegotiation: true,
         })
         .build();
