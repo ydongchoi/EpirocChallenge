@@ -21,7 +21,7 @@ namespace MiningVehicle.Extensions
                         ? "http://localhost:5173"
                         : "https://happy-river-0f3b0221e.4.azurestaticapps.net";
 
-                    builder.WithOrigins("https://happy-river-0f3b0221e.4.azurestaticapps.net")
+                    builder
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials()
@@ -36,6 +36,7 @@ namespace MiningVehicle.Extensions
 
             services.AddSignalR().AddAzureSignalR(opt => {
                     opt.ConnectionString = azureSignalrConnectionString;
+                    opt.MaxHubServerConnectionCount = 10;
                 }                
             );
         }
@@ -52,19 +53,12 @@ namespace MiningVehicle.Extensions
                 Console.WriteLine($"Hub URL: {hubUrl}");
 
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub", opt => {
-                        opt.SkipNegotiation = true;
-                        opt.Transports = HttpTransportType.WebSockets;
-                    })
+                    .WithUrl(hubUrl)
                     .WithStatefulReconnect()
                     .Build();
 
                 hubConnection.KeepAliveInterval = TimeSpan.FromSeconds(300);
                 hubConnection.ServerTimeout = TimeSpan.FromSeconds(300);
-                hubConnection.On<DateTime>("Heartbeat", (time) =>
-                {
-                    Console.WriteLine($"Heartbeat received: {time}");
-                });
 
                 Console.WriteLine("Hub Connection:");
                 Console.WriteLine(hubConnection.ToString());
