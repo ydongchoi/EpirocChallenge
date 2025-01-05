@@ -56,7 +56,7 @@ namespace MiningVehicle.Extensions
                         opt.SkipNegotiation = true;
                         opt.Transports = HttpTransportType.WebSockets;
                     })
-                    .WithAutomaticReconnect()
+                    .WithStatefulReconnect()
                     .Build();
 
                 Console.WriteLine("Hub Connection:");
