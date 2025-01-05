@@ -5,6 +5,7 @@ using MiningVehicle.Infrastructure.Data;
 using MiningVehicle.VehicleEmulator.Components;
 using System.Text.Json;
 using MiningVehicle.VehicleEmulator.ConfigurationModels;
+using Microsoft.AspNetCore.Http.Connections;
 
 namespace MiningVehicle.Extensions
 {
@@ -33,8 +34,9 @@ namespace MiningVehicle.Extensions
             var azureSignalrConnectionString = Environment.GetEnvironmentVariable("SignalR_ConnectionString");
             Console.WriteLine($"Azure SignalR Connection String: {azureSignalrConnectionString.ToString()}");
 
-            services.AddSignalR().AddAzureSignalR(opt =>
-                opt.ConnectionString = azureSignalrConnectionString
+            services.AddSignalR().AddAzureSignalR(opt => {
+                    opt.ConnectionString = azureSignalrConnectionString;
+                }                
             );
         }
 
@@ -50,7 +52,10 @@ namespace MiningVehicle.Extensions
                 Console.WriteLine($"Hub URL: {hubUrl}");
 
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub")
+                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub", opt => {
+                        opt.SkipNegotiation = true;
+                        opt.Transports = HttpTransportType.WebSockets;
+                    })
                     .WithAutomaticReconnect()
                     .Build();
 
