@@ -66,8 +66,7 @@ namespace MiningVehicle.SignalR.VehicleHub
 
             // Send vehicle data to UI
             await SendVehicleDataToUIAsync(vehicleData);
-            Console.WriteLine("Sended vehicle data to UI...");
-
+        
             _vehicleData.Add(vehicleDataInfrastructure);
 
             if(_vehicleData.Count > 50){
@@ -90,6 +89,7 @@ namespace MiningVehicle.SignalR.VehicleHub
         public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
         {   
             await Clients.All.SendAsync("ReceiveVehicleDataAsync", vehicleData);
+            Console.WriteLine("Sended vehicle data to UI...");
         }
     }
 }
