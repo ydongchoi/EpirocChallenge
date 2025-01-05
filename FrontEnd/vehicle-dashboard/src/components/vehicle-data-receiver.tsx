@@ -120,7 +120,7 @@ const VehicleDataReceiver: React.FC = () => {
       .catch((error: any) => console.error('Connection failed: ', error));
       
     }
-  }, [connection, setMessages]);
+  }, [connection]);
 
   return (
     <div>
