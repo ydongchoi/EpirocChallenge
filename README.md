@@ -10,13 +10,15 @@ The Epiroc Challenge project simulates vehicle data transmission and visualizati
 
 ## Flow
 
-![image](https://github.com/user-attachments/assets/ba99e895-a16f-45de-9a2c-f91dc6dbf2be)
+![Vehicle Data Flow](https://github.com/user-attachments/assets/ba99e895-a16f-45de-9a2c-f91dc6dbf2be)
 
-- The Vehicle Emulator sends vehicle data to the SignalR client at a frequency of 10Hz.
-- The SignalR Hub processes the incoming data and forwards it to the UI in real-time.
-- The SignalR Hub handles data storage.
-- The API handles additional processing as needed.
-- The UI updates the vehicle dashboard with the latest data.
+1. **Data Transmission**: The Vehicle Emulator sends vehicle data to the SignalR client at a frequency of 10Hz.
+2. **Data Processing**: The SignalR Hub processes the incoming data and forwards it to the UI in real-time.
+3. **Data Storage**: The SignalR Hub handles data storage.
+4. **API Processing**: The API handles additional processing as needed.
+5. **UI Update**: The UI updates the vehicle dashboard with the latest data.
+
+This flow ensures real-time data visualization and efficient data handling for the Epiroc Challenge project.
 
 ## Features
 
