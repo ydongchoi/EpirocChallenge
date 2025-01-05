@@ -97,20 +97,28 @@ const VehicleDataReceiver: React.FC = () => {
 
   useEffect(() => {
     if (connection) {
+      connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
+        console.log('Received message: ', message);
+        setMessages(message);
+      });
+
       connection.start()
       .then(() => {
         connection.invoke('GetConnectionId').then((id: any) => {
           console.log('ConnectionId: ', id);
         });
         console.log('Connection started');
-        
-        connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
-          console.log('Received message: ', message);
-          setMessages(message);
-        });
       })
       .catch((error: any) => console.error('Connection failed: ', error));
     }
+
+    // Cleanup: stop the connection when the component unmounts
+    return () => {
+      if (connection) {
+        connection.off('ReceiveVehicleDataAsync'); // Unsubscribe from the event
+        connection.stop(); // Stop the connection
+      }
+    };
   }, [connection]);
 
   return (
