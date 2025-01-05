@@ -89,7 +89,7 @@ namespace MiningVehicle.SignalR.VehicleHub
 
         public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
         {   
-            if(_connectionIds["react"] == null)
+            if(!_connectionIds.ContainsKey("react"))
             {
                 Console.WriteLine("Connection ID for React UI not found");
                 return;
