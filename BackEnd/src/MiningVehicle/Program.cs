@@ -17,7 +17,7 @@ builder.Services.AddSingleton<IMiningVehicleClient, MiningVehicleClient>();
 builder.Services.AddMiningVehicle(builder.Configuration);
 
 // Hubs
-builder.Services.AddSignalR().AddAzureSignalR(System.Environment.GetEnvironmentVariable("SignalR:ConnectionString"));
+builder.Services.AddSignalR().AddAzureSignalR(System.Environment.GetEnvironmentVariable("CUSTOMCONNSTR_SIGNALR"));
 
 // builder.Services.AddSignalR(e => {
 //     e.EnableDetailedErrors = true;
