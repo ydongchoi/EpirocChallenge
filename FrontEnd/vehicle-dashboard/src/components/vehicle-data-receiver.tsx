@@ -105,6 +105,10 @@ const VehicleDataReceiver: React.FC = () => {
   useEffect(() => {
     if (connection) {
       connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
+        connection.invoke('GetConnectionId').then((id: any) => {
+          console.log('ConnectionId: ', id);
+        });
+        
         console.log('Received message: ', message);
         setMessages(message);
       });
