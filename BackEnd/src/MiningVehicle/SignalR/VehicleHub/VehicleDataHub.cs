@@ -8,29 +8,12 @@ namespace MiningVehicle.SignalR.VehicleHub
     public class VehicleDataHub : Hub
     {
         private readonly IRepository _vehicleDataRepository;
-        private Dictionary<string, string> _connectionIds;
         private List<MiningVehicle.Infrastructure.Models.VehicleData> _vehicleData;
 
         public VehicleDataHub(IRepository vehicleDataRepository)
         {
             _vehicleDataRepository = vehicleDataRepository;
-            _connectionIds = new Dictionary<string, string>();
             _vehicleData = new List<MiningVehicle.Infrastructure.Models.VehicleData>();
-        }
-
-        public override async Task OnConnectedAsync()
-        {
-            var httpContext = Context.GetHttpContext();
-            if (httpContext != null)
-            {
-                var user = httpContext.Request.Query["user"];
-                string connectionId = Context.ConnectionId;
-
-                if (!string.IsNullOrEmpty(user.ToString()))
-                    _connectionIds.Add(user.ToString(), connectionId);
-            }
-
-            await base.OnConnectedAsync();
         }
 
         public string GetConnectionId()
@@ -106,14 +89,7 @@ namespace MiningVehicle.SignalR.VehicleHub
 
         public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
         {   
-            if(!_connectionIds.ContainsKey("react"))
-            {
-                Console.WriteLine("Connection ID for React UI not found");
-                return;
-            }
-
-            var connectionId = _connectionIds["react"];
-            await Clients.Client(connectionId).SendAsync("ReceiveVehicleDataAsync", vehicleData);
+            await Clients.All.SendAsync("ReceiveVehicleDataAsync", vehicleData);
         }
     }
 }
