@@ -26,6 +26,16 @@ namespace MiningVehicle.Extensions
                 });
             });
 
+        public static void AddAzureSignalRHub(this IServiceCollection services, IConfiguration configuration)
+        {
+            var azureSignalrConnectionString = Environment.GetEnvironmentVariable("CUSTOMCONNSTR_SIGNALR");
+            Console.WriteLine($"Azure SignalR Connection String: {azureSignalrConnectionString.ToString()}");
+
+            services.AddSignalR().AddAzureSignalR(opt =>
+                opt.ConnectionString = azureSignalrConnectionString
+            );
+        }
+
         public static IServiceCollection AddSignalRClients(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<HubConnection>(provider =>
