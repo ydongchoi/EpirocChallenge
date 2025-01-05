@@ -20,6 +20,46 @@ The Epiroc Challenge project simulates vehicle data transmission and visualizati
 
 This flow ensures real-time data visualization and efficient data handling for the Epiroc Challenge project.
 
+## Specifications
+
+### Motor Configuration
+The motor configuration defines the key parameters for the vehicle's motor performance. Below is the JSON representation of the motor configuration:
+
+```json
+{
+    "MotorRotation": 1,
+    "WheelRotation": 6,  
+    "NominalPower": 520000,
+    "NominalTorque": 2200
+}
+```
+
+- **MotorRotation**: The rotation speed of the motor.
+- **WheelRotation**: The rotation speed of the wheels, which is typically a multiple of the motor rotation.
+- **NominalPower**: The nominal power output of the motor in watts.
+- **NominalTorque**: The nominal torque produced by the motor in Newton-meters.
+
+### Battery Configuration
+The battery configuration specifies the parameters for the vehicle's battery system. Below is the JSON representation of the battery configuration:
+
+```json
+{
+    "Capacity": 675000,
+    "Charge": 675000,
+    "ChargingRate": 1000,
+    "Efficiency": 0.9,
+    "Temperature": 0
+}
+```
+
+- **Capacity**: The total capacity of the battery in watt-hours.
+- **Charge**: The current charge level of the battery in watt-hours.
+- **ChargingRate**: The rate at which the battery can be charged in watts.
+- **Efficiency**: The efficiency of the battery, represented as a decimal.
+- **Temperature**: The current temperature of the battery in degrees Celsius.
+
+These specifications can be modified in the `appsettings.json` file to adjust the vehicle's performance characteristics.
+
 ## Features
 
 - **Vehicle Dashboard**: The UI presents a comprehensive dashboard displaying:
