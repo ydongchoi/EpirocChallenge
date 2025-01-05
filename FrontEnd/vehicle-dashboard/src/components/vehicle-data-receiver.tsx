@@ -86,6 +86,8 @@ const VehicleDataReceiver: React.FC = () => {
       const negotiateData = await negotiateResponse.json();
       const accessToken = negotiateData.accessToken;
 
+      console.log("negotiated");
+
       const newConnection = new HubConnectionBuilder()
         .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`, {
           accessTokenFactory: () => accessToken,
