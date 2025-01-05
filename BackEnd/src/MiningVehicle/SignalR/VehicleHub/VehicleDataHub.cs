@@ -58,13 +58,13 @@ namespace MiningVehicle.SignalR.VehicleHub
                     Temperature = vehicleData.BatteryData.Temperature
                 }
             };
-            
-            Console.WriteLine("Saving vehicle data to database...");
-            await _vehicleDataRepository.AddVehicleDataAsync(vehicleDataInfrastructure);
 
             // Send vehicle data to UI
             Console.WriteLine("Sending vehicle data to UI...");
             await SendVehicleDataToUIAsync(vehicleData);
+
+            Console.WriteLine("Saving vehicle data to database...");
+            await _vehicleDataRepository.AddVehicleDataAsync(vehicleDataInfrastructure);
 
             await Clients.Caller.SendAsync("ReceiveVehicleData", vehicleData);
         }
