@@ -15,13 +15,15 @@ namespace MiningVehicle.Infrastructure.Data
         {
             _mongoDbCongigurationOptions = mongoDBConfigurationOptions;
             _mongoDbConfiguration = _mongoDbCongigurationOptions.Value;
-            
-            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(_mongoDbConfiguration.ConnectionString));
+            var connectionString = System.Environment.GetEnvironmentVariable("DOCDBCONNSTR_MONGODB");
+            var databaseName = System.Environment.GetEnvironmentVariable("DOCDBCONNSTR_MONGODB_DATABASE");
+
+            MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
             settings.SslSettings = new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
             var client = new MongoClient(settings);
 
             //var client = new MongoClient(_mongoDbConfiguration.ConnectionString);
-            _database = client.GetDatabase(_mongoDbConfiguration.Database);
+            _database = client.GetDatabase(databaseName);
         }
 
         public IMongoCollection<T> GetCollection<T>(string name)
