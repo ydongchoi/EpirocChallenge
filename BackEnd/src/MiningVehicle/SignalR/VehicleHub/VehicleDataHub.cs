@@ -9,11 +9,13 @@ namespace MiningVehicle.SignalR.VehicleHub
     {
         private readonly IRepository _vehicleDataRepository;
         private Dictionary<string, string> _connectionIds;
+        private List<MiningVehicle.Infrastructure.Models.VehicleData> _vehicleData;
 
         public VehicleDataHub(IRepository vehicleDataRepository)
         {
             _vehicleDataRepository = vehicleDataRepository;
             _connectionIds = new Dictionary<string, string>();
+            _vehicleData = new List<MiningVehicle.Infrastructure.Models.VehicleData>();
         }
 
         public override async Task OnConnectedAsync()
@@ -82,9 +84,16 @@ namespace MiningVehicle.SignalR.VehicleHub
             // Send vehicle data to UI
             await SendVehicleDataToUIAsync(vehicleData);
             Console.WriteLine("Sended vehicle data to UI...");
-          
-            await _vehicleDataRepository.AddVehicleDataAsync(vehicleDataInfrastructure);
-            Console.WriteLine("Saved vehicle data to database...");
+
+            _vehicleData.Add(vehicleDataInfrastructure);
+
+            if(_vehicleData.Count > 50){
+                await _vehicleDataRepository.AddVehicleDataAsync(_vehicleData);
+                Console.WriteLine("Saved vehicle data to database...");
+                _vehicleData.Clear();
+            }
+            //await _vehicleDataRepository.AddVehicleDataAsync(vehicleDataInfrastructure);
+            //Console.WriteLine("Saved vehicle data to database...");
        
             await Clients.Caller.SendAsync("ReceiveVehicleData", vehicleData);
             Console.WriteLine("Sended vehicle data to caller...");

@@ -15,11 +15,19 @@ namespace MiningVehicle.Infrastructure.Repositories
             Console.WriteLine(_vehicleDataCollection);
         }
 
-        public async Task AddVehicleDataAsync(VehicleData vehicleData)
+        public async Task AddVehicleDataAsync(List<VehicleData> vehicleDataList)
         {
-            Console.WriteLine("Adding vehicle data to database...");
-            await _vehicleDataCollection.InsertOneAsync(vehicleData);
-            Console.WriteLine("Vehicle data added to database.");
+            var bulkOps = new List<WriteModel<VehicleData>>();
+
+            foreach (var vehicleData in vehicleDataList)
+            {
+                var insertOne = new InsertOneModel<VehicleData>(vehicleData);
+                bulkOps.Add(insertOne);
+            }
+
+            Console.WriteLine($"Adding vehicle data to database...");
+            await _vehicleDataCollection.BulkWriteAsync(bulkOps);
+            Console.WriteLine("Saved to database...");
         }
     }
 }
