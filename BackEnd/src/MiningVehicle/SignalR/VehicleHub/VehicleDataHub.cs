@@ -68,7 +68,8 @@ namespace MiningVehicle.SignalR.VehicleHub
         }
 
         public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
-        {
+        {   
+            Console.WriteLine("Sending vehicle data to UI...");
             await Clients.All.SendAsync("ReceiveVehicleDataAsync", vehicleData);
         }
     }
