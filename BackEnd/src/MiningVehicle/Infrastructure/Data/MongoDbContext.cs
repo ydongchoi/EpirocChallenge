@@ -15,8 +15,11 @@ namespace MiningVehicle.Infrastructure.Data
         {
             _mongoDbCongigurationOptions = mongoDBConfigurationOptions;
             _mongoDbConfiguration = _mongoDbCongigurationOptions.Value;
-            var connectionString = System.Environment.GetEnvironmentVariable("DOCDBCONNSTR_MONGODB");
+            var connectionString = System.Environment.GetEnvironmentVariable("MongoDbConfiguration:ConnectionString");
             var databaseName = System.Environment.GetEnvironmentVariable("MongoDbConfiguration:Database");
+
+            Console.WriteLine($"MongoDB Connection String: {connectionString}");
+            Console.WriteLine($"MongoDB Database Name: {databaseName}");
 
             MongoClientSettings settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
             settings.SslSettings = new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
