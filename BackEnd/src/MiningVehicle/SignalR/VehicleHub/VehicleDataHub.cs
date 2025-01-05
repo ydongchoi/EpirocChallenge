@@ -31,6 +31,15 @@ namespace MiningVehicle.SignalR.VehicleHub
             await base.OnConnectedAsync();
         }
 
+        public async Task SendHeartbeatAsync()
+        {
+            while (true)
+            {
+                await Task.Delay(20000);
+                await Clients.All.SendAsync("Heartbeat", DateTime.UtcNow);
+            }
+        }
+
         public string GetConnectionId()
         {
             return Context.ConnectionId;

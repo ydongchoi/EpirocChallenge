@@ -61,6 +61,10 @@ namespace MiningVehicle.Extensions
 
                 hubConnection.KeepAliveInterval = TimeSpan.FromSeconds(300);
                 hubConnection.ServerTimeout = TimeSpan.FromSeconds(300);
+                hubConnection.On<DateTime>("Heartbeat", (time) =>
+                {
+                    Console.WriteLine($"Heartbeat received: {time}");
+                });
 
                 Console.WriteLine("Hub Connection:");
                 Console.WriteLine(hubConnection.ToString());
