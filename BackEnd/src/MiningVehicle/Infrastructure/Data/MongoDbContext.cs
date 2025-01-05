@@ -15,8 +15,8 @@ namespace MiningVehicle.Infrastructure.Data
         {
             _mongoDbCongigurationOptions = mongoDBConfigurationOptions;
             _mongoDbConfiguration = _mongoDbCongigurationOptions.Value;
-            var connectionString = System.Environment.GetEnvironmentVariable("MongoDbConfiguration:ConnectionString");
-            var databaseName = System.Environment.GetEnvironmentVariable("MongoDbConfiguration:Database");
+            var connectionString = Environment.GetEnvironmentVariable("MongoDbConfiguration_ConnectionString");
+            var databaseName = Environment.GetEnvironmentVariable("MongoDbConfiguration_Database");
 
             Console.WriteLine($"MongoDB Connection String: {connectionString}");
             Console.WriteLine($"MongoDB Database Name: {databaseName}");
