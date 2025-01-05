@@ -105,12 +105,13 @@ const VehicleDataReceiver: React.FC = () => {
         console.log('Connection started');
         
         connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
-          console.log('Received message: ', message.batteryData.power);
+          console.log('Received message: ', message);
           setMessages(message);
         });
-      });
+      })
+      .catch((error: any) => console.error('Connection failed: ', error));
     }
-  },[connection]);
+  }, [connection]);
 
   return (
     <div>
