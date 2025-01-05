@@ -3,6 +3,7 @@ using MiningVehicle.Infrastructure.ConfigurationModels;
 using MiningVehicle.VehicleEmulator;
 using MiningVehicle.Infrastructure.Data;
 using MiningVehicle.VehicleEmulator.Components;
+using System.Text.Json;
 using MiningVehicle.VehicleEmulator.ConfigurationModels;
 
 namespace MiningVehicle.Extensions
@@ -48,7 +49,20 @@ namespace MiningVehicle.Extensions
                 Console.WriteLine($"Hub URL: {hubUrl}");
 
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub")
+                    .WithUrl(hubUrl, options =>
+                    {
+                        options.AccessTokenProvider = async () =>
+                        {
+                            // Fetch the access token from the negotiate URL
+                            using var httpClient = new HttpClient();
+                            var response = await httpClient.GetAsync("https://mining-vehicle.azurewebsites.net/vehicleDatahub/negotiate");
+                            response.EnsureSuccessStatusCode();
+
+                            var responseContent = await response.Content.ReadAsStringAsync();
+                            var token = JsonDocument.Parse(responseContent).RootElement.GetProperty("accessToken").GetString();
+                            return token;
+                        };
+                    })
                     .WithAutomaticReconnect()
                     .Build();
 
