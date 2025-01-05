@@ -75,7 +75,7 @@ const VehicleDataReceiver: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const negotiateResponse = await fetch(`https://mining-vehicle.azurewebsites.net/vehicleDatahub/negotiate`, {
-        method: 'POST',
+        method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
 
