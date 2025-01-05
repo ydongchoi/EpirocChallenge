@@ -10,12 +10,16 @@ namespace MiningVehicle.Infrastructure.Repositories
 
         public VehicleDataRepository(MongoDbContext mongoDbContext)
         {
+            Console.WriteLine("VehicleDataRepository constructor");
             _vehicleDataCollection = mongoDbContext.GetCollection<VehicleData>("VehicleData");
+            Console.WriteLine(_vehicleDataCollection.ToString());
         }
 
         public async Task AddVehicleDataAsync(VehicleData vehicleData)
         {
+            Console.WriteLine("Adding vehicle data to database...");
             await _vehicleDataCollection.InsertOneAsync(vehicleData);
+            Console.WriteLine("Vehicle data added to database.");
         }
     }
 }
