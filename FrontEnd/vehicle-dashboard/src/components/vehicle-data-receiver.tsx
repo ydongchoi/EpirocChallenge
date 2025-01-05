@@ -35,6 +35,8 @@ const requestCharging = async () => {
       headers: { 'Content-Type': 'application/json' },
     });
 
+    console.log('request charging response: ', response);
+    
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -53,6 +55,8 @@ const requestSpeed = async (event: Event, speed: number) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ speed }),
     });
+
+    console.log("request speed: ", speed);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -77,6 +81,7 @@ const VehicleDataReceiver: React.FC = () => {
       const newConnection = new HubConnectionBuilder()
         .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`, {
           skipNegotiation: true,
+          transport: 1, // WebSockets
         })
         .build();
       
