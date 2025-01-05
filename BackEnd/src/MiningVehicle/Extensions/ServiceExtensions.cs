@@ -50,20 +50,7 @@ namespace MiningVehicle.Extensions
                 Console.WriteLine($"Hub URL: {hubUrl}");
 
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl(hubUrl, options =>
-                    {
-                        options.AccessTokenProvider = async () =>
-                        {
-                            // Fetch the access token from the negotiate URL
-                            using var httpClient = new HttpClient();
-                            var response = await httpClient.GetAsync("https://mining-vehicle.azurewebsites.net/vehicleDatahub/negotiate");
-                            response.EnsureSuccessStatusCode();
-
-                            var responseContent = await response.Content.ReadAsStringAsync();
-                            var token = JsonDocument.Parse(responseContent).RootElement.GetProperty("accessToken").GetString();
-                            return token;
-                        };
-                    })
+                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub")
                     .WithAutomaticReconnect()
                     .Build();
 
