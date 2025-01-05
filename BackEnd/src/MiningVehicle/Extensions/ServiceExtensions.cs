@@ -53,7 +53,11 @@ namespace MiningVehicle.Extensions
                 Console.WriteLine($"Hub URL: {hubUrl}");
 
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl(hubUrl)
+                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub", options =>
+                    {
+                        options.Transports = HttpTransportType.WebSockets;
+                        options.SkipNegotiation = false;
+                    })
                     .WithStatefulReconnect()
                     .Build();
 
