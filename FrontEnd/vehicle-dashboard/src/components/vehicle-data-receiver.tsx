@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HubConnectionBuilder } from '@microsoft/signalr';
+import { HubConnectionBuilder, HttpTransportType, LogLevel } from '@microsoft/signalr';
 import { VehicleData } from '../models/vehicle-data.interface';
 import Gauge from './gauge';
 import BatteryGauge from 'react-battery-gauge';
@@ -79,12 +79,19 @@ const VehicleDataReceiver: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const newConnection = new HubConnectionBuilder()
-        .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`, {
-          skipNegotiation: true,
-          transport: 1, // WebSockets
-        })
+        .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`, 
+          {
+            transport: HttpTransportType.WebSockets,
+            skipNegotiation: false
+          }
+        )
+        .configureLogging(LogLevel.Information)
+        .withStatefulReconnect()
         .build();
       
+        newConnection.serverTimeoutInMilliseconds = 300000;
+        newConnection.keepAliveIntervalInMilliseconds = 300000;
+
       console.log('newConnection: ', newConnection);
       console.log(newConnection.baseUrl);
       console.log(newConnection.connectionId);
@@ -102,23 +109,17 @@ const VehicleDataReceiver: React.FC = () => {
         setMessages(message);
       });
 
-      connection.start()
-      .then(() => {
-        connection.invoke('GetConnectionId').then((id: any) => {
-          console.log('ConnectionId: ', id);
-        });
-        console.log('Connection started');
-      })
-      .catch((error: any) => console.error('Connection failed: ', error));
-    }
 
-    // Cleanup: stop the connection when the component unmounts
-    return () => {
-      if (connection) {
-        connection.off('ReceiveVehicleDataAsync'); // Unsubscribe from the event
-        connection.stop(); // Stop the connection
-      }
-    };
+      connection.start()
+        .then(() => {
+          connection.invoke('GetConnectionId').then((id: any) => {
+            console.log('ConnectionId: ', id);
+          });
+          console.log('Connection started');
+        })
+      .catch((error: any) => console.error('Connection failed: ', error));
+      
+    }
   }, [connection]);
 
   return (
