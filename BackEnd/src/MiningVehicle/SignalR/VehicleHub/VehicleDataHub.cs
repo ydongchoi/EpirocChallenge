@@ -59,9 +59,11 @@ namespace MiningVehicle.SignalR.VehicleHub
                 }
             };
             
+            Console.WriteLine("Saving vehicle data to database...");
             await _vehicleDataRepository.AddVehicleDataAsync(vehicleDataInfrastructure);
 
             // Send vehicle data to UI
+            Console.WriteLine("Sending vehicle data to UI...");
             await SendVehicleDataToUIAsync(vehicleData);
 
             await Clients.Caller.SendAsync("ReceiveVehicleData", vehicleData);
@@ -69,7 +71,6 @@ namespace MiningVehicle.SignalR.VehicleHub
 
         public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
         {   
-            Console.WriteLine("Sending vehicle data to UI...");
             await Clients.All.SendAsync("ReceiveVehicleDataAsync", vehicleData);
         }
     }
