@@ -162,7 +162,7 @@ const VehicleDataReceiver: React.FC = () => {
               <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <BatteryGauge value={(messages?.batteryData.percentage || 0) * 100} orientation='vertical' size={100} />
                 <Typography variant="h6" style={{ marginTop: '10px' }}>
-                    {messages?.batteryData.percentage ?? 0} %
+                  {((messages?.batteryData?.percentage ?? 0) * 100).toFixed(2)} %
                 </Typography>
               </CardContent>
             </Card>

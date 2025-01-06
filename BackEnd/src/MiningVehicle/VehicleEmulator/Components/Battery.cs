@@ -54,12 +54,12 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void ChargeBattery()
         {
+            UpdateTemperature(ChargingRate);
+
             Status = BatteryStatus.Charging;
             Power = - ChargingRate / Efficiency;
             Charge -= Power;
             
-            UpdateTemperature(Power);
-
             if (Charge > Capacity)
             {
                 Charge = Capacity;
@@ -74,10 +74,10 @@ namespace MiningVehicle.VehicleEmulator.Components
             if(motorStatus == MotorStatus.Off) Status = BatteryStatus.Off;
             else Status = BatteryStatus.Discharging;
 
+            UpdateTemperature(discharge);
+
             Power = discharge / Efficiency;
             Charge -= (Power) * 0.1;
-
-            UpdateTemperature(Power);
 
             if (Charge < 0)
             {
@@ -97,13 +97,20 @@ namespace MiningVehicle.VehicleEmulator.Components
             Console.WriteLine($"Battery Percentage: {Percentage * 100}%\n");
         }
 
-        public void UpdateTemperature(double power)
+        public void UpdateTemperature(double charge)
         {
-            double energyLoss = Math.Pow(power, 2) * 0.05;
-            double temperatureRise = energyLoss / (1000 * 1.5);
+            charge = Math.Abs(charge);
             
-            if(this.Temperature > 0) this.Temperature = this.Temperature + temperatureRise;
-            else this.Temperature = 0;
+            double power = charge / Efficiency;
+            double deltaPower = power - Power;
+
+            bool isPowerPositive = deltaPower > 0;
+ 
+            double energyLoss = Math.Pow(deltaPower, 2) * 0.05 * (isPowerPositive ? 1 : -1);
+            double temperatureRise = energyLoss / (1000 * 1.5);
+
+            if(charge > 1)Temperature += temperatureRise;
+            else Temperature = Math.Max(0, Temperature - 0.02);
         }
     }
 
