@@ -104,11 +104,17 @@ namespace MiningVehicle.VehicleEmulator
                 Rpm = _motor.Rpm
             };
 
+            var BreakData = new BreakData
+            {
+                Status = BreakStatus.Off
+            };
+
 
             var vehicleData = new VehicleData
             {
                 Timestamp = DateTime.Now,
                 BatteryData = batteryData,
+                BreakData = BreakData,
                 MotorData = motorData
             };
 

@@ -32,8 +32,7 @@ namespace MiningVehicle.Extensions
         public static void AddAzureSignalRHub(this IServiceCollection services, IConfiguration configuration)
         {
             var azureSignalrConnectionString = Environment.GetEnvironmentVariable("SignalR_ConnectionString");
-            Console.WriteLine($"Azure SignalR Connection String: {azureSignalrConnectionString.ToString()}");
-
+       
             services
                 .AddSignalR(
                     opt => {

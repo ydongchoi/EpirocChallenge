@@ -5,9 +5,9 @@ namespace MiningVehicle.SignalR.VehicleHub.Models
     public class VehicleData
     {
         public DateTime Timestamp { get; set; }
-        public BatteryData BatteryData { get; set; }
-        public BreakData BreakData { get; set; }
-        public MotorData MotorData { get; set; }
+        public required BatteryData BatteryData { get; set; }
+        public required BreakData BreakData { get; set; }
+        public required MotorData MotorData { get; set; }
     }
 
     public class BatteryData
@@ -23,7 +23,7 @@ namespace MiningVehicle.SignalR.VehicleHub.Models
     }
 
     public class BreakData{
-        public BreakStatus? Status { get; set; }
+        public BreakStatus Status { get; set; }
     }
 
     public class MotorData

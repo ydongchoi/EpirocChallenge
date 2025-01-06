@@ -8,19 +8,19 @@ namespace MiningVehicle.Infrastructure.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+        public string? Id { get; set; }
 
         [BsonElement("timestamp")]
         public DateTime TimeStamp { get; set; }
 
         [BsonElement("battery")]
-        public BatteryData BatteryData { get; set; }
+        public required BatteryData BatteryData { get; set; }
 
         [BsonElement("motor")]
-        public MotorData MotorData { get; set; }
+        public required MotorData MotorData { get; set; }
 
         [BsonElement("brake")]
-        public BrakeData BrakeData { get; set; }
+        public required BrakeData BrakeData { get; set; }
     }
 
     public class BatteryData

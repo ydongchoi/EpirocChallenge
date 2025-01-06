@@ -88,6 +88,10 @@ namespace MiningVehicle.VehicleEmulator
                     Percentage = vehicleData.BatteryData.Percentage,
                     Power = vehicleData.BatteryData.Power,                   
                     Temperature = vehicleData.BatteryData.Temperature
+                },
+                BrakeData = new MiningVehicle.Infrastructure.Models.BrakeData
+                {
+                    Status = vehicleData.BreakData.Status
                 }
             };
 
