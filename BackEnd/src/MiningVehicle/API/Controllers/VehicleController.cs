@@ -39,11 +39,11 @@ namespace MiningVehicle.API.Controller
         }
 
         [HttpPost("chargeBattery")]
-        public IActionResult ChargeBattery([FromBody]string isCharging)
+        public IActionResult ChargeBattery([FromBody] ChargeBatteryDTO chargeBatteryDTO)
         {
             try
             {
-                if (isCharging == "true")
+                if (chargeBatteryDTO.IsCharging == true)
                 {
                     _vehicleService.ChargeBattery();
                 }
