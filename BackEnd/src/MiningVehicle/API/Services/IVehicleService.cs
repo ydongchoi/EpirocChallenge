@@ -5,5 +5,6 @@ namespace MiningVehicle.API.Services
         Task AdjustSpeed(int speed);
         void Break();
         void ChargeBattery();
+        void StopBatteryCharging();
     }
 }

@@ -28,14 +28,13 @@ function valuetext(value: number) {
 // ? process.env.REACT_APP_VEHICLE_SIGNALR_URL_PROD
 // : process.env.REACT_APP_VEHICLE_SIGNALR_URL_DEV;
 
-const requestCharging = async () => {
+const requestCharging = async (isCharging: boolean) => {
   try {
     const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/chargeBattery`, {
-      method: 'GET',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isCharging }),
     });
-
-    console.log('request charging response: ', response);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -70,6 +69,7 @@ const requestSpeed = async (event: Event, speed: number) => {
 
 const VehicleDataReceiver: React.FC = () => {
   const [messages, setMessages] = useState<VehicleData>();
+  const [batteryStatus, setBatteryStatus] = useState<boolean>(false);
   const [connection, setConnection] = useState<any>(null);
 
   const motorStatusMap = ['off', 'idle', 'running', 'warning', 'fault'];
@@ -207,12 +207,13 @@ const VehicleDataReceiver: React.FC = () => {
         <BottomNavigationAction label="Gear" icon={<Cog />} />
         <BottomNavigationAction label="Engine" icon={<Omega />} />
         <BottomNavigationAction label="Menu" icon={<MenuIcon />} style={{ flexGrow: 1, textAlign: 'center' }} />
-        <BottomNavigationAction label="BatteryTemperature" icon={<Battery />} />
+        <BottomNavigationAction label="Battery" icon={<Battery />} />
         <BottomNavigationAction 
           label={batteryStatusMap[Number(messages?.batteryData?.status ?? 0)] === "charging" ? "Charger On" : "Charger Off"}
           icon={<PlugZap color={batteryStatusMap[Number(messages?.batteryData?.status ?? 0)] === "charging" ? "green" : "red"} />}
           onClick={() => {
-           requestCharging();
+            setBatteryStatus(!batteryStatus);
+            requestCharging(!batteryStatus);
           }}
         />
       </BottomNavigation>

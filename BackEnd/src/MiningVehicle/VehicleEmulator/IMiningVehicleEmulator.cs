@@ -8,5 +8,6 @@ namespace MiningVehicle.VehicleEmulator
         public void Break();
         
         public Task ChargeBattery();
+        public Task StopBatteryCharging();
     }
 }

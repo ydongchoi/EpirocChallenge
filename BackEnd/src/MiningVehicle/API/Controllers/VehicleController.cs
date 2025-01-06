@@ -38,19 +38,26 @@ namespace MiningVehicle.API.Controller
             return Ok();
         }
 
-        [HttpGet("chargeBattery")]
-        public IActionResult ChargeBattery()
+        [HttpPost("chargeBattery")]
+        public IActionResult ChargeBattery([FromBody]string isCharging)
         {
             try
             {
-                _vehicleService.ChargeBattery();
+                if (isCharging == "true")
+                {
+                    _vehicleService.ChargeBattery();
+                }
+                else
+                {
+                    _vehicleService.StopBatteryCharging();
+                }
 
-                return Ok("Battery is charging");
+                return Ok("Battery charging status changed");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-        }
+        }        
     }
 }

@@ -81,6 +81,15 @@ namespace MiningVehicle.VehicleEmulator
             await _miningVehicleClient.SendVehicleDataAsync(vehicleData);
         }
 
+        public async Task StopBatteryCharging()
+        {
+            Console.WriteLine("Stopping battery charging...\n");
+            _battery.PowerOff();
+
+            var vehicleData = GetVehicleData();
+            await _miningVehicleClient.SendVehicleDataAsync(vehicleData);
+        }
+
         private VehicleData GetVehicleData()
         {
 
