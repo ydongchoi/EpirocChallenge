@@ -55,7 +55,7 @@ namespace MiningVehicle.Extensions
                 var hubConnection = new HubConnectionBuilder()
                     .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub", options =>
                     {
-                        options.Transports = HttpTransportType.WebSockets;
+                        options.Transports = HttpTransportType.WebSockets | HttpTransportType.LongPolling;
                         options.SkipNegotiation = false;
                     })
                     .WithStatefulReconnect()

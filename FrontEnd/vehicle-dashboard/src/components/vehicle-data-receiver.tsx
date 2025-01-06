@@ -81,7 +81,7 @@ const VehicleDataReceiver: React.FC = () => {
       const newConnection = new HubConnectionBuilder()
         .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`, 
           {
-            transport: HttpTransportType.WebSockets,
+            transport: HttpTransportType.WebSockets | HttpTransportType.LongPolling,
             skipNegotiation: false
           }
         )
