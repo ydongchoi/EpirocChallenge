@@ -8,6 +8,11 @@ The Epiroc Challenge project simulates vehicle data transmission and visualizati
 - **Data Transmission**: The Vehicle Emulator transmits vehicle data at a frequency of 10Hz using a SignalR client.
 - **Data Handling**: SignalR receives the transmitted vehicle data and forwards it to the user interface (UI) in real-time.
 
+## Video Demonstration
+
+
+
+
 ## Flow
 
 ![Vehicle Data Flow](https://github.com/user-attachments/assets/ba99e895-a16f-45de-9a2c-f91dc6dbf2be)
