@@ -6,25 +6,22 @@ namespace MiningVehicle.VehicleEmulator.Components
     public class Battery
     {
         // Configuration
-        private readonly IOptions<BatteryConfiguration> _batteryConfigurationOptions;
         private readonly BatteryConfiguration _batteryConfiguration;
 
         // Properties
-        public double Capacity { get; private set; } // 60000 Wha
-        public double Charge { get; private set; } // 50000 Wha (Fast Charger), take 30 minutes to charge at 80% capacity
+        public double Capacity { get; private set; }
+        public double Charge { get; private set; }
         public double ChargingRate { get; private set; }
         public double Efficiency { get; private set; }
         public double Percentage => Charge / Capacity;
-        public double Power{ get; private set; }
+        public double Power { get; private set; }
         public BatteryStatus Status { get; private set; }
         public double Temperature { get; private set; }
-
 
         // Constructor
         public Battery(IOptions<BatteryConfiguration> batteryConfigurationOptions)
         {
-            _batteryConfigurationOptions = batteryConfigurationOptions;
-            _batteryConfiguration = _batteryConfigurationOptions.Value;
+            _batteryConfiguration = batteryConfigurationOptions.Value;
 
             Capacity = _batteryConfiguration.Capacity;
             Charge = _batteryConfiguration.Charge;
@@ -57,27 +54,25 @@ namespace MiningVehicle.VehicleEmulator.Components
             UpdateTemperature(ChargingRate);
 
             Status = BatteryStatus.Charging;
-            Power = - ChargingRate / Efficiency;
+            Power = -ChargingRate / Efficiency;
             Charge -= Power;
-            
+
             if (Charge > Capacity)
             {
                 Charge = Capacity;
                 Status = BatteryStatus.Full;
-
                 Console.WriteLine("Battery is full\n");
             }
         }
 
         public void DischargeBattery(double discharge, MotorStatus motorStatus)
         {
-            if(motorStatus == MotorStatus.Off) Status = BatteryStatus.Off;
-            else Status = BatteryStatus.Discharging;
+            Status = motorStatus == MotorStatus.Off ? BatteryStatus.Off : BatteryStatus.Discharging;
 
             UpdateTemperature(discharge);
 
             Power = discharge / Efficiency;
-            Charge -= (Power) * 0.1;
+            Charge -= Power * 0.1;
 
             if (Charge < 0)
             {
@@ -97,27 +92,29 @@ namespace MiningVehicle.VehicleEmulator.Components
             Console.WriteLine($"Battery Percentage: {Percentage * 100}%\n");
         }
 
-        public void UpdateTemperature(double charge)
+        private void UpdateTemperature(double charge)
         {
-            if(Status == BatteryStatus.Off){
+            if (Status == BatteryStatus.Off)
+            {
                 Temperature = 0;
                 return;
             }
+
             charge = Math.Abs(charge);
-            
             double power = charge / Efficiency;
             double deltaPower = power - Power;
-
             bool isPowerPositive = deltaPower > 0;
- 
+
             double energyLoss = Math.Pow(deltaPower, 2) * 0.05 * (isPowerPositive ? 1 : -1);
             double temperatureRise = energyLoss / (200000 * 1.5);
 
-            if(charge > 1){
+            if (charge > 1)
+            {
                 Temperature += temperatureRise;
                 Temperature = Math.Min(Temperature, 100);
             }
-            else {
+            else
+            {
                 Temperature = Math.Max(0, Temperature - 0.02);
             }
         }
