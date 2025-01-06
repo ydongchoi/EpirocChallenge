@@ -2,15 +2,18 @@
 
 The Epiroc Challenge project simulates vehicle data transmission and visualization using modern web technologies and cloud services.
 
+
 ## Overview
 
 - **Vehicle Specifications**: Each vehicle has detailed motor and battery specifications.
 - **Data Transmission**: The Vehicle Emulator transmits vehicle data at a frequency of 10Hz using a SignalR client.
 - **Data Handling**: SignalR receives the transmitted vehicle data and forwards it to the user interface (UI) in real-time.
 
+
 ## Video Demonstration
 
 https://github.com/user-attachments/assets/b76089d3-0efb-4ed7-bfe4-b86d76cd3638
+
 
 ## Flow
 
@@ -23,6 +26,7 @@ https://github.com/user-attachments/assets/b76089d3-0efb-4ed7-bfe4-b86d76cd3638
 5. **UI Update**: The UI updates the vehicle dashboard with the latest data.
 
 This flow ensures real-time data visualization and efficient data handling for the Epiroc Challenge project.
+
 
 ## Specifications
 
@@ -64,6 +68,7 @@ The battery configuration specifies the parameters for the vehicle's battery sys
 
 These specifications can be modified in the `appsettings.json` file to adjust the vehicle's performance characteristics.
 
+
 ## Features
 
 - **Vehicle Dashboard**: The UI presents a comprehensive dashboard displaying:
@@ -75,12 +80,14 @@ These specifications can be modified in the `appsettings.json` file to adjust th
     - Brake status
 - **Navigation**: Additional menu buttons for navigation within the application.
 
+
 ## BackEnd
 
 - **Framework**: .NET 8
 - **API**: RESTful API for data handling
 - **Real-time Communication**: Azure SignalR for real-time data transmission
 - **Database**: Azure Cosmos DB configured for MongoDB API (Request Units)
+
 
 ## FrontEnd
 
@@ -89,9 +96,11 @@ These specifications can be modified in the `appsettings.json` file to adjust th
 - **UI Library**: MUI (Material-UI)
 - **Build Tool**: Vite for fast development and build processes
 
+
 ## CI/CD
 
 - **Automation**: GitHub Actions for continuous integration and continuous deployment
+
 
 ## Deployment
 
@@ -100,3 +109,62 @@ These specifications can be modified in the `appsettings.json` file to adjust th
 - **Azure Static Web Apps**: For hosting the React frontend
 - **Azure Cosmos DB**: For MongoDB account (Request Units)
 - **Azure SignalR**: For real-time communication
+
+
+## Setup Development
+
+To set up the development environment for the Epiroc Challenge project, follow these steps:
+
+
+### Git Clone
+
+First, clone the repository to your local machine:
+
+```bash
+git clone https://github.com/your-repo/EpirocChallenge.git
+cd EpirocChallenge
+```
+
+### Backend
+
+Navigate to the backend directory and set up the .NET environment:
+
+```bash
+cd BackEnd/src/MiningVehicle/
+```
+
+Ensure you have the correct .NET version installed:
+If not, install the latest .NET SDK from the official [Microsoft .NET download page](https://dotnet.microsoft.com/download).
+
+```bash
+dotnet --version
+```
+```bash
+dotnet restore
+```
+```bash
+dotnet build
+```
+```bash
+dotnet run
+```
+This will restore the necessary packages, build the project, and run the backend server.
+
+### Frontend
+
+Navigate to the frontend directory and set up the React environment:
+
+```bash
+cd FrontEnd
+npm install
+npm start
+```
+
+This will install the required dependencies and start the development server for the frontend.
+
+### Configuration
+
+Ensure that the `appsettings.json` file is properly configured with your Azure services and other necessary settings.
+
+By following these steps, you will have the development environment set up and ready for the Epiroc Challenge project.
+
