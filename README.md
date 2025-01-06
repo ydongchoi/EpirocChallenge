@@ -176,6 +176,49 @@ npm run dev
 
 This will install the required dependencies and start the development server for the frontend.
 
+
+## Azure Services Configuration
+
+To set up the necessary Azure services for the Epiroc Challenge project, follow these steps:
+
+#### Azure SignalR
+
+1. **Create SignalR Service**:
+    - Navigate to the Azure portal.
+    - Create a new SignalR service instance.
+    - Choose the "Free" tier for development purposes.
+
+2. **Retrieve Primary Connection String**:
+    - Once the SignalR service is created, go to the "Keys" section.
+    - Copy the "Primary Connection String".
+
+3. **Configure SignalR in `appsettings.json`**:
+    - Open the `appsettings.json` file in your backend project.
+    - Add the SignalR connection string under the appropriate section.
+
+#### Azure Cosmos DB for MongoDB
+
+1. **Create Azure Cosmos DB Account**:
+    - Navigate to the Azure portal.
+    - Create a new Azure Cosmos DB account with the MongoDB API.
+    - Choose the "Request Units" (RU) option for throughput.
+
+2. **Retrieve Primary Connection String**:
+    - Once the Cosmos DB account is created, go to the "Connection String" section.
+    - Copy the "Primary Connection String".
+
+3. **Create Database and Collection**:
+    - In the Azure portal, navigate to your Cosmos DB account.
+    - Create a new database named `MiningVehicle`.
+    - Within this database, create a new collection named `VehicleData`.
+
+4. **Configure Cosmos DB in `appsettings.json`**:
+    - Open the `appsettings.json` file in your backend project.
+    - Add the Cosmos DB connection string under the appropriate section.
+
+By following these steps, you will have the necessary Azure services configured and integrated with your Epiroc Challenge project.
+
+
 ### Configuration
 
 Ensure that the `appsettings.json` file is properly configured with your Azure services and other necessary settings.
