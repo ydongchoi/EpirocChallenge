@@ -2,35 +2,32 @@
 
 The Epiroc Challenge project simulates vehicle data transmission and visualization using modern web technologies and cloud services.
 
-
 ## Overview
 
 - **Vehicle Specifications**: Each vehicle has detailed motor and battery specifications.
 - **Data Transmission**: The Vehicle Emulator transmits vehicle data at a frequency of 10Hz using a SignalR client.
 - **Data Handling**: SignalR receives the transmitted vehicle data and forwards it to the user interface (UI) in real-time.
 
-
 ## Video Demonstration
 
-https://github.com/user-attachments/assets/b76089d3-0efb-4ed7-bfe4-b86d76cd3638
-
+[Video Demonstration](https://github.com/user-attachments/assets/b76089d3-0efb-4ed7-bfe4-b86d76cd3638)
 
 ## Flow
 
-![image](https://github.com/user-attachments/assets/e305e702-f9a5-49e7-8f52-3ee4e7d58e07)
+![Flow Diagram](https://github.com/user-attachments/assets/e305e702-f9a5-49e7-8f52-3ee4e7d58e07)
 
 1. **Data Transmission**: The Vehicle Emulator sends vehicle data to the SignalR client at a frequency of 10Hz.
 2. **Data Processing**: The SignalR Hub processes the incoming data and forwards it to the UI in real-time.
-3. **Data Storage**: The SignalR Hub handles data storage.
+3. **Data Storage**: The SignalR Client handles data storage.
 4. **API Processing**: The API handles additional processing as needed.
 5. **UI Update**: The UI updates the vehicle dashboard with the latest data.
 
 This flow ensures real-time data visualization and efficient data handling for the Epiroc Challenge project.
 
-
 ## Specifications
 
 ### Motor Configuration
+
 The motor configuration defines the key parameters for the vehicle's motor performance. Below is the JSON representation of the motor configuration:
 
 ```json
@@ -48,6 +45,7 @@ The motor configuration defines the key parameters for the vehicle's motor perfo
 - **NominalTorque**: The nominal torque produced by the motor in Newton-meters.
 
 ### Battery Configuration
+
 The battery configuration specifies the parameters for the vehicle's battery system. Below is the JSON representation of the battery configuration:
 
 ```json
@@ -68,7 +66,6 @@ The battery configuration specifies the parameters for the vehicle's battery sys
 
 These specifications can be modified in the `appsettings.json` file to adjust the vehicle's performance characteristics.
 
-
 ## Features
 
 - **Vehicle Dashboard**: The UI presents a comprehensive dashboard displaying:
@@ -80,27 +77,23 @@ These specifications can be modified in the `appsettings.json` file to adjust th
     - Brake status
 - **Navigation**: Additional menu buttons for navigation within the application.
 
-
-## BackEnd
+## Backend
 
 - **Framework**: .NET 8
 - **API**: RESTful API for data handling
 - **Real-time Communication**: Azure SignalR for real-time data transmission
 - **Database**: Azure Cosmos DB configured for MongoDB API (Request Units)
 
-
-## FrontEnd
+## Frontend
 
 - **Framework**: React
 - **Language**: TypeScript
 - **UI Library**: MUI (Material-UI)
 - **Build Tool**: Vite for fast development and build processes
 
-
 ## CI/CD
 
 - **Automation**: GitHub Actions for continuous integration and continuous deployment
-
 
 ## Deployment
 
@@ -110,11 +103,9 @@ These specifications can be modified in the `appsettings.json` file to adjust th
 - **Azure Cosmos DB**: For MongoDB account (Request Units)
 - **Azure SignalR**: For real-time communication
 
-
 ## Setup Development
 
 To set up the development environment for the Epiroc Challenge project, follow these steps:
-
 
 ### Git Clone
 
@@ -133,21 +124,15 @@ Navigate to the backend directory and set up the .NET environment:
 cd BackEnd/src/MiningVehicle/
 ```
 
-Ensure you have the correct .NET version installed:
-If not, install the latest .NET SDK from the official [Microsoft .NET download page](https://dotnet.microsoft.com/download).
+Ensure you have the correct .NET version installed. If not, install the latest .NET SDK from the official [Microsoft .NET download page](https://dotnet.microsoft.com/download).
 
 ```bash
 dotnet --version
-```
-```bash
 dotnet restore
-```
-```bash
 dotnet build
-```
-```bash
 dotnet run
 ```
+
 This will restore the necessary packages, build the project, and run the backend server.
 
 ### Frontend
@@ -158,30 +143,22 @@ Navigate to the frontend directory and set up the React environment:
 cd FrontEnd/vehicle-dashboard/
 ```
 
-Ensure you have Node.js and npm installed:
-If not, install Node.js and npm from the official [Node.js download page](https://nodejs.org/).
+Ensure you have Node.js and npm installed. If not, install Node.js and npm from the official [Node.js download page](https://nodejs.org/).
+
 ```bash
 node -v
 npm -v
-```
-
-
-```bash
 npm install
-```
-
-```bash
 npm run dev
 ```
 
 This will install the required dependencies and start the development server for the frontend.
 
-
 ## Azure Services Configuration
 
 To set up the necessary Azure services for the Epiroc Challenge project, follow these steps:
 
-#### Azure SignalR
+### Azure SignalR
 
 1. **Create SignalR Service**:
     - Navigate to the Azure portal.
@@ -196,7 +173,7 @@ To set up the necessary Azure services for the Epiroc Challenge project, follow 
     - Open the `appsettings.json` file in your backend project.
     - Add the SignalR connection string under the appropriate section.
 
-#### Azure Cosmos DB for MongoDB
+### Azure Cosmos DB for MongoDB
 
 1. **Create Azure Cosmos DB Account**:
     - Navigate to the Azure portal.
@@ -218,16 +195,19 @@ To set up the necessary Azure services for the Epiroc Challenge project, follow 
 
 By following these steps, you will have the necessary Azure services configured and integrated with your Epiroc Challenge project.
 
-
 ### Configuration
 
 Ensure that the `appsettings.json` file is properly configured with your Azure services and other necessary settings.
 
 By following these steps, you will have the development environment set up and ready for the Epiroc Challenge project.
 
-
 ## Testing
 
 - **Backend Testing**: Use xUnit for writing and running tests.
 - **Frontend Testing**: Use Jest for writing and running tests.
 
+## Issue
+
+When you do test, there is some error not showing data. Press F12 and see the message "connection started" in the console. Then press F5, and the speed control goes to 0, and you see the battery at 100%. Then start it. Note that Azure SignalR is on the free tier, which allows up to 20,000 messages per day.
+
+If you have any questions, contact me at yeongdong.choi7@gmail.com.
