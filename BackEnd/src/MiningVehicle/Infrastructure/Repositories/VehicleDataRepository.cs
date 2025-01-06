@@ -29,10 +29,5 @@ namespace MiningVehicle.Infrastructure.Repositories
             await _vehicleDataCollection.BulkWriteAsync(bulkOps);
             Console.WriteLine("Saved to database...");
         }
-
-        public async Task InsertOneVehicleDataAsync(VehicleData vehicleData)
-        {
-            await _vehicleDataCollection.InsertOneAsync(vehicleData);
-        }
     }
 }
