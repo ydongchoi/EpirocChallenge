@@ -14,7 +14,7 @@ https://github.com/user-attachments/assets/9c96cdc8-f01c-4e7d-aeb5-64c91d0b1fc2
 
 ## Flow
 
-![Vehicle Data Flow](https://github.com/user-attachments/assets/ba99e895-a16f-45de-9a2c-f91dc6dbf2be)
+![image](https://github.com/user-attachments/assets/e305e702-f9a5-49e7-8f52-3ee4e7d58e07)
 
 1. **Data Transmission**: The Vehicle Emulator sends vehicle data to the SignalR client at a frequency of 10Hz.
 2. **Data Processing**: The SignalR Hub processes the incoming data and forwards it to the UI in real-time.
