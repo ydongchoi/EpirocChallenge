@@ -155,9 +155,23 @@ This will restore the necessary packages, build the project, and run the backend
 Navigate to the frontend directory and set up the React environment:
 
 ```bash
-cd FrontEnd
+cd FrontEnd/vehicle-dashboard/
+```
+
+Ensure you have Node.js and npm installed:
+If not, install Node.js and npm from the official [Node.js download page](https://nodejs.org/).
+```bash
+node -v
+npm -v
+```
+
+
+```bash
 npm install
-npm start
+```
+
+```bash
+npm run dev
 ```
 
 This will install the required dependencies and start the development server for the frontend.
