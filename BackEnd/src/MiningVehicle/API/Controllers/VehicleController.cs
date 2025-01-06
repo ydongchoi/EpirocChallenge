@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using MiningVehicle.API.DTO;
 using MiningVehicle.API.Services;
-using MiningVehicle.VehicleEmulator;
 
-namespace MiningVehicle.API.Controller
+namespace MiningVehicle.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -20,10 +18,14 @@ namespace MiningVehicle.API.Controller
         [HttpPost("adjust-speed")]
         public async Task<IActionResult> AdjustSpeed([FromBody] AdjustSpeedDTO adjustSpeedDTO)
         {
+            if (adjustSpeedDTO == null)
+            {
+                return BadRequest("Invalid speed adjustment data.");
+            }
+
             try
             {
                 await _vehicleService.AdjustSpeed(adjustSpeedDTO.Speed);
-
                 return Ok($"Speed adjusted to {adjustSpeedDTO.Speed}");
             }
             catch (Exception ex)
@@ -35,15 +37,28 @@ namespace MiningVehicle.API.Controller
         [HttpPost("break")]
         public IActionResult Break()
         {
-            return Ok();
+            try
+            {
+                _vehicleService.Break();
+                return Ok("Vehicle break applied.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("charge-battery")]
         public IActionResult ChargeBattery([FromBody] ChargeBatteryDTO chargeBatteryDTO)
         {
+            if (chargeBatteryDTO == null)
+            {
+                return BadRequest("Invalid battery charging data.");
+            }
+
             try
             {
-                if (chargeBatteryDTO.IsCharging == true)
+                if (chargeBatteryDTO.IsCharging)
                 {
                     _vehicleService.ChargeBattery();
                 }
@@ -52,12 +67,12 @@ namespace MiningVehicle.API.Controller
                     _vehicleService.StopBatteryCharging();
                 }
 
-                return Ok("Battery charging status changed");
+                return Ok("Battery charging status changed.");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-        }        
+        }
     }
 }
