@@ -150,7 +150,7 @@ namespace MiningVehicle.VehicleEmulator
             // TODO : Implement IDisposable to Motor and Battery
             _timer.Stop();
             _timer.Dispose();
-            _miningVehicleClient.DisConnectAsync().Wait();
+            _miningVehicleClient.DisconnectAsync().Wait();
         }
     }
 }

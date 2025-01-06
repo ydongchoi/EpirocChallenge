@@ -6,6 +6,6 @@ namespace MiningVehicle.VehicleEmulator
     {
         public Task ConnectAsync();
         public Task SendVehicleDataAsync(VehicleData vehicleData);
-        public Task DisConnectAsync();
+        public Task DisconnectAsync();
     }
 }

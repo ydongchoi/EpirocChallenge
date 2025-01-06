@@ -8,30 +8,26 @@ namespace MiningVehicle.VehicleEmulator
     public class MiningVehicleClient : IMiningVehicleClient
     {
         private readonly HubConnection _connection;
-
         private readonly IRepository _vehicleDataRepository;
         private List<MiningVehicle.Infrastructure.Models.VehicleData> _vehicleData;
-        
         private System.Timers.Timer _timer;
 
         public MiningVehicleClient(HubConnection connection, IRepository vehicleDataRepository)
         {
             _connection = connection;
-
             _vehicleDataRepository = vehicleDataRepository;
             _vehicleData = new List<MiningVehicle.Infrastructure.Models.VehicleData>();
 
             _timer = new System.Timers.Timer(30000);
             _timer.Elapsed += OnTimedEvent;
-
         }
 
         public async Task ConnectAsync()
         {
+            if (_connection.State == HubConnectionState.Connected) return;
+
             try
             {
-                if(_connection.State == HubConnectionState.Connected) return;
-
                 await _connection.StartAsync();
                 Console.WriteLine("SignalR client connected.\n");
             }
@@ -46,12 +42,12 @@ namespace MiningVehicle.VehicleEmulator
             try
             {
                 await _connection.InvokeAsync("SendVehicleDataAsync", vehicleData);
-                Console.WriteLine($"Sended vehicle data...");
+                Console.WriteLine("Sent vehicle data...");
 
-                _connection.On<VehicleData>("ReceiveVehicleData", async (vehicleData) =>
+                _connection.On<VehicleData>("ReceiveVehicleData", async (data) =>
                 {
-                    await SaveDataToVehicleRepository(vehicleData);
-                    Console.WriteLine($"Recevied From Client Successfully: {vehicleData}");
+                    await SaveDataToVehicleRepository(data);
+                    Console.WriteLine($"Received From Client Successfully: {data}");
                 });
             }
             catch (Exception ex)
@@ -60,14 +56,14 @@ namespace MiningVehicle.VehicleEmulator
             }
         }
 
-        public async Task DisConnectAsync()
+        public async Task DisconnectAsync()
         {
             await _connection.StopAsync();
             Console.WriteLine("SignalR client disconnected.\n");
         }
 
-        private async Task SaveDataToVehicleRepository(VehicleData vehicleData){
-            // Save vehicle data to database
+        private async Task SaveDataToVehicleRepository(VehicleData vehicleData)
+        {
             var vehicleDataInfrastructure = new MiningVehicle.Infrastructure.Models.VehicleData
             {
                 TimeStamp = vehicleData.Timestamp,
@@ -86,7 +82,7 @@ namespace MiningVehicle.VehicleEmulator
                     ChargingRate = vehicleData.BatteryData.ChargingRate,
                     Efficiency = vehicleData.BatteryData.Efficiency,
                     Percentage = vehicleData.BatteryData.Percentage,
-                    Power = vehicleData.BatteryData.Power,                   
+                    Power = vehicleData.BatteryData.Power,
                     Temperature = vehicleData.BatteryData.Temperature
                 },
                 BrakeData = new MiningVehicle.Infrastructure.Models.BrakeData
@@ -98,7 +94,8 @@ namespace MiningVehicle.VehicleEmulator
             _vehicleData.Add(vehicleDataInfrastructure);
             Console.WriteLine($"{_vehicleData.Count} vehicle data saved to list...");
 
-            if(_vehicleData.Count > 50){
+            if (_vehicleData.Count > 50)
+            {
                 await _vehicleDataRepository.AddVehicleDataAsync(_vehicleData);
                 Console.WriteLine("Saved vehicle data to database...");
                 _vehicleData.Clear();
@@ -120,6 +117,5 @@ namespace MiningVehicle.VehicleEmulator
                 }
             }
         }
-
     }
 }
