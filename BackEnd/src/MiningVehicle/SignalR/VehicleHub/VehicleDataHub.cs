@@ -65,15 +65,15 @@ namespace MiningVehicle.SignalR.VehicleHub
             // Send vehicle data to UI
             await SendVehicleDataToUIAsync(vehicleData);
         
-            _vehicleData.Add(vehicleDataInfrastructure);
-            Console.WriteLine($"{_vehicleData.Count} vehicle data saved to list...");
-            if(_vehicleData.Count > 50){
-                await _vehicleDataRepository.AddVehicleDataAsync(_vehicleData);
-                Console.WriteLine("Saved vehicle data to database...");
-                _vehicleData.Clear();
-            }
-            //await _vehicleDataRepository.AddVehicleDataAsync(vehicleDataInfrastructure);
-            //Console.WriteLine("Saved vehicle data to database...");
+            // _vehicleData.Add(vehicleDataInfrastructure);
+            // Console.WriteLine($"{_vehicleData.Count} vehicle data saved to list...");
+            // if(_vehicleData.Count > 50){
+            //     await _vehicleDataRepository.AddVehicleDataAsync(_vehicleData);
+            //     Console.WriteLine("Saved vehicle data to database...");
+            //     _vehicleData.Clear();
+            // }
+            await _vehicleDataRepository.InsertOneVehicleDataAsync(vehicleDataInfrastructure);
+            Console.WriteLine("Saved vehicle data to database...");
        
             await Clients.Caller.SendAsync("ReceiveVehicleData", vehicleData);
             Console.WriteLine("Sended vehicle data to caller...");
