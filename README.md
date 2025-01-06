@@ -225,3 +225,9 @@ Ensure that the `appsettings.json` file is properly configured with your Azure s
 
 By following these steps, you will have the development environment set up and ready for the Epiroc Challenge project.
 
+
+## Testing
+
+- **Backend Testing**: Use xUnit for writing and running tests.
+- **Frontend Testing**: Use Jest for writing and running tests.
+
