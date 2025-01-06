@@ -48,8 +48,6 @@ namespace MiningVehicle.VehicleEmulator
 
         public void StopEngine()
         {
-            _timer.Stop();
-         
             Console.WriteLine("Stopping the engine...\n");
             _motor.StopMotor();
         }
