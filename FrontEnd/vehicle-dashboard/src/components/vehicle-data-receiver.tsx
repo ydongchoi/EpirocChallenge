@@ -170,12 +170,12 @@ const VehicleDataReceiver: React.FC = () => {
           <Grid item xs={12} sm={6} md={2}>
             <Card style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <CardHeader title={<Typography variant="h6">Battery Temperature</Typography>} />
-                <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Thermometer size={100} />
                 <Typography variant="h6" style={{ marginTop: '10px' }}>
-                {(messages?.batteryData?.temperature ?? 0).toFixed(2)} °C
+                  {(messages?.batteryData?.temperature ?? 0).toFixed(2)} °C
                 </Typography>
-                </CardContent>
+              </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
@@ -200,12 +200,21 @@ const VehicleDataReceiver: React.FC = () => {
         </Grid>
       </Grid>
 
-      <BottomNavigation style={{ justifyContent: 'space-between' }}>
+      <BottomNavigation 
+        showLabels
+        style={{ justifyContent: 'space-between' }}
+        >
         <BottomNavigationAction label="Gear" icon={<Cog />} />
         <BottomNavigationAction label="Engine" icon={<Omega />} />
         <BottomNavigationAction label="Menu" icon={<MenuIcon />} style={{ flexGrow: 1, textAlign: 'center' }} />
         <BottomNavigationAction label="BatteryTemperature" icon={<Battery />} />
-        <BottomNavigationAction label="Charge" icon={<PlugZap onClick={requestCharging} />} />
+        <BottomNavigationAction 
+          label={batteryStatusMap[Number(messages?.batteryData?.status ?? 0)] === "charging" ? "Charger On" : "Charger Off"}
+          icon={<PlugZap color={batteryStatusMap[Number(messages?.batteryData?.status ?? 0)] === "charging" ? "green" : "red"} />}
+          onClick={() => {
+           requestCharging();
+          }}
+        />
       </BottomNavigation>
     </div>
   );

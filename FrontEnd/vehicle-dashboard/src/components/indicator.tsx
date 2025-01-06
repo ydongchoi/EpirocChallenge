@@ -8,7 +8,7 @@ interface IndicatorProps {
     active?: boolean
 }
 
-export const Indicator: FC<IndicatorProps> = ({ type, value, active = false }) => {
+export const Indicator: FC<IndicatorProps> = ({ type, value, active = true }) => {
     const icons = {
         battery: Battery,
         circleParking: CircleParking,
@@ -27,17 +27,17 @@ export const Indicator: FC<IndicatorProps> = ({ type, value, active = false }) =
             borderRadius={1}
             color={active ? 'red' : 'gray'}
         >
+            <Icon
+            style={{
+                width: '30px',
+                height: '30px',
+                color: 'white',
+            }}
+            />
             {value !== undefined && (
-                <Typography variant="body1" style={{ marginLeft: '4px' }}>
-                    <Icon
-                        style={{
-                            width: '30px',
-                            height: '30px',
-                            color: active ? '#f44336' : '#bdbdbd'
-                        }}
-                    />
-                    {value}
-                </Typography>
+            <Typography variant="body1" style={{ marginLeft: '4px', color: 'white' }}>
+                {value}
+            </Typography>
             )}
         </Box>
     )
