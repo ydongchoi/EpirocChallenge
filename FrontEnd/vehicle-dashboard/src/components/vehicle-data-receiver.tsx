@@ -30,7 +30,7 @@ function valuetext(value: number) {
 
 const requestCharging = async (isCharging: boolean) => {
   try {
-    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/chargeBattery`, {
+    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/charge-battery`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ isCharging }),
@@ -49,7 +49,7 @@ const requestCharging = async (isCharging: boolean) => {
 const requestSpeed = async (event: Event, speed: number) => {
   console.log('event' + event);
   try {
-    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/adjustSpeed`, {
+    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/adjust-speed`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ speed }),

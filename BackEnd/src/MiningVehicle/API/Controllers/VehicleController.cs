@@ -17,7 +17,7 @@ namespace MiningVehicle.API.Controller
             _vehicleService = vehicleService;
         }
 
-        [HttpPost("adjustSpeed")]
+        [HttpPost("adjust-speed")]
         public async Task<IActionResult> AdjustSpeed([FromBody] AdjustSpeedDTO adjustSpeedDTO)
         {
             try
@@ -38,7 +38,7 @@ namespace MiningVehicle.API.Controller
             return Ok();
         }
 
-        [HttpPost("chargeBattery")]
+        [HttpPost("charge-battery")]
         public IActionResult ChargeBattery([FromBody] ChargeBatteryDTO chargeBatteryDTO)
         {
             try
