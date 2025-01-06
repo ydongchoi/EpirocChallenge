@@ -4,26 +4,24 @@ using MiningVehicle.VehicleEmulator.Models;
 
 namespace MiningVehicle.VehicleEmulator
 {
-    public sealed class MinigVehicleEmulator : IMiningVehicleEmulator, IDisposable
+    public sealed class MiningVehicleEmulator : IMiningVehicleEmulator, IDisposable
     {
-
         // Components
-        private Battery _battery;
-        private Motor _motor;
+        private readonly Battery _battery;
+        private readonly Motor _motor;
 
         // SignalR
-        private IMiningVehicleClient _miningVehicleClient;
+        private readonly IMiningVehicleClient _miningVehicleClient;
 
         private int _speed;
         private System.Timers.Timer _timer;
 
-        public MinigVehicleEmulator(Battery battery, Motor motor, IMiningVehicleClient miningVehicleClient)
+        public MiningVehicleEmulator(Battery battery, Motor motor, IMiningVehicleClient miningVehicleClient)
         {
-            _battery = battery;
-            _motor = motor;
+            _battery = battery ?? throw new ArgumentNullException(nameof(battery));
+            _motor = motor ?? throw new ArgumentNullException(nameof(motor));
+            _miningVehicleClient = miningVehicleClient ?? throw new ArgumentNullException(nameof(miningVehicleClient));
 
-            _miningVehicleClient = miningVehicleClient;
-        
             _timer = new System.Timers.Timer(100);
             _timer.Elapsed += OnTimedEvent;
         }
@@ -42,8 +40,7 @@ namespace MiningVehicle.VehicleEmulator
             Console.WriteLine("Condition check passed, starting the engine...\n");
             _motor.StartMotor();
 
-            var vehicleData = GetVehicleData();
-            _miningVehicleClient.SendVehicleDataAsync(vehicleData).Wait();
+            SendVehicleDataAsync().Wait();
         }
 
         public void StopEngine()
@@ -55,15 +52,14 @@ namespace MiningVehicle.VehicleEmulator
 
         public async Task AdjustSpeed(int speed)
         {
-            if(_motor.Status == MotorStatus.Off) StartEngine();
+            if (_motor.Status == MotorStatus.Off) StartEngine();
 
             Console.WriteLine($"Adjusting speed to {speed}...\n");
             _speed = speed;
             _motor.AdjustSpeed(speed);
             _battery.CheckCurrentBattery();
 
-            var vehicleData = GetVehicleData();
-            await _miningVehicleClient.SendVehicleDataAsync(vehicleData);
+            await SendVehicleDataAsync();
         }
 
         public void Break()
@@ -77,8 +73,7 @@ namespace MiningVehicle.VehicleEmulator
             Console.WriteLine("Charging battery...\n");
             _battery.ChargeBattery();
 
-            var vehicleData = GetVehicleData();
-            await _miningVehicleClient.SendVehicleDataAsync(vehicleData);
+            await SendVehicleDataAsync();
         }
 
         public async Task StopBatteryCharging()
@@ -86,48 +81,43 @@ namespace MiningVehicle.VehicleEmulator
             Console.WriteLine("Stopping battery charging...\n");
             _battery.PowerOff();
 
-            var vehicleData = GetVehicleData();
-            await _miningVehicleClient.SendVehicleDataAsync(vehicleData);
+            await SendVehicleDataAsync();
         }
 
         private VehicleData GetVehicleData()
         {
-
-            var batteryData = new BatteryData
-            {
-                Capacity = _battery.Capacity,
-                Charge = _battery.Charge,
-                ChargingRate = _battery.ChargingRate,
-                Efficiency = _battery.Efficiency,
-                Status = _battery.Status,
-                Percentage = _battery.Percentage,
-                Power = _battery.Power,
-                Temperature = _battery.Temperature
-            };
-
-            var motorData = new MotorData
-            {
-                GearRatio = _motor.GearRatio,
-                Status = _motor.Status,
-                Speed = _motor.Speed,
-                Rpm = _motor.Rpm
-            };
-
-            var BreakData = new BreakData
-            {
-                Status = BreakStatus.Off
-            };
-
-
-            var vehicleData = new VehicleData
+            return new VehicleData
             {
                 Timestamp = DateTime.Now,
-                BatteryData = batteryData,
-                BreakData = BreakData,
-                MotorData = motorData
+                BatteryData = new BatteryData
+                {
+                    Capacity = _battery.Capacity,
+                    Charge = _battery.Charge,
+                    ChargingRate = _battery.ChargingRate,
+                    Efficiency = _battery.Efficiency,
+                    Status = _battery.Status,
+                    Percentage = _battery.Percentage,
+                    Power = _battery.Power,
+                    Temperature = _battery.Temperature
+                },
+                BreakData = new BreakData
+                {
+                    Status = BreakStatus.Off
+                },
+                MotorData = new MotorData
+                {
+                    GearRatio = _motor.GearRatio,
+                    Status = _motor.Status,
+                    Speed = _motor.Speed,
+                    Rpm = _motor.Rpm
+                }
             };
+        }
 
-            return vehicleData;
+        private async Task SendVehicleDataAsync()
+        {
+            var vehicleData = GetVehicleData();
+            await _miningVehicleClient.SendVehicleDataAsync(vehicleData);
         }
 
         private void OnTimedEvent(object? source, ElapsedEventArgs e)
@@ -135,8 +125,8 @@ namespace MiningVehicle.VehicleEmulator
             _miningVehicleClient.ConnectAsync();
 
             if (_battery.Status == BatteryStatus.Charging)
-            {   
-                ChargeBattery();
+            {
+                ChargeBattery().Wait();
             }
 
             if (_motor.Status == MotorStatus.Idle || _motor.Status == MotorStatus.Running)
@@ -147,7 +137,6 @@ namespace MiningVehicle.VehicleEmulator
 
         public void Dispose()
         {
-            // TODO : Implement IDisposable to Motor and Battery
             _timer.Stop();
             _timer.Dispose();
             _miningVehicleClient.DisconnectAsync().Wait();

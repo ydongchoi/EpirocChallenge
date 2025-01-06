@@ -78,7 +78,7 @@ namespace MiningVehicle.Extensions
 
             services.AddSingleton<Battery>();
             services.AddSingleton<Motor>();
-            services.AddSingleton<IMiningVehicleEmulator, MinigVehicleEmulator>();
+            services.AddSingleton<IMiningVehicleEmulator, MiningVehicleEmulator>();
         }
 
         private static string GetHubUrl()
