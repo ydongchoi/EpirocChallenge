@@ -173,7 +173,7 @@ const VehicleDataReceiver: React.FC = () => {
                 <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Thermometer size={100} />
                 <Typography variant="h6" style={{ marginTop: '10px' }}>
-                  {messages?.batteryData.temperature ?? 0} °C
+                {(messages?.batteryData?.temperature ?? 0).toFixed(2)} °C
                 </Typography>
                 </CardContent>
             </Card>

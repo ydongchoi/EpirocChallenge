@@ -107,10 +107,15 @@ namespace MiningVehicle.VehicleEmulator.Components
             bool isPowerPositive = deltaPower > 0;
  
             double energyLoss = Math.Pow(deltaPower, 2) * 0.05 * (isPowerPositive ? 1 : -1);
-            double temperatureRise = energyLoss / (1000 * 1.5);
+            double temperatureRise = energyLoss / (200000 * 1.5);
 
-            if(charge > 1)Temperature += temperatureRise;
-            else Temperature = Math.Max(0, Temperature - 0.02);
+            if(charge > 1){
+                Temperature += temperatureRise;
+                Temperature = Math.Min(Temperature, 100);
+            }
+            else {
+                Temperature = Math.Max(0, Temperature - 0.02);
+            }
         }
     }
 
