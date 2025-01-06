@@ -34,11 +34,18 @@ namespace MiningVehicle.Extensions
             var azureSignalrConnectionString = Environment.GetEnvironmentVariable("SignalR_ConnectionString");
             Console.WriteLine($"Azure SignalR Connection String: {azureSignalrConnectionString.ToString()}");
 
-            services.AddSignalR().AddAzureSignalR(opt => {
-                    opt.ConnectionString = azureSignalrConnectionString;
-                    opt.MaxHubServerConnectionCount = 10;
-                }                
-            );
+            services
+                .AddSignalR(
+                    opt => {
+                        opt.KeepAliveInterval = TimeSpan.FromSeconds(60);
+                    }
+                )
+                .AddAzureSignalR(
+                    opt => {
+                        opt.ConnectionString = azureSignalrConnectionString;
+                        opt.MaxHubServerConnectionCount = 10;
+                    }                
+                );
         }
 
         public static IServiceCollection AddSignalRClients(this IServiceCollection services, IConfiguration configuration)
@@ -53,7 +60,8 @@ namespace MiningVehicle.Extensions
                 Console.WriteLine($"Hub URL: {hubUrl}");
 
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub", options =>
+                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub", 
+                    options =>
                     {
                         options.Transports = HttpTransportType.WebSockets;
                         options.SkipNegotiation = false;

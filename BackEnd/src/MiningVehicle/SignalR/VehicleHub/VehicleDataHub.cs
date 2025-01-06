@@ -23,8 +23,6 @@ namespace MiningVehicle.SignalR.VehicleHub
 
         public async Task SendVehicleDataAsync(VehicleData vehicleData)
         {   
-            await SendHeartbeatAsync();
-
             Console.WriteLine("Received vehicle data...");
             Console.WriteLine($"Timestamp: {vehicleData.Timestamp}");
             Console.WriteLine($"Status: {vehicleData.MotorData.Status}");
@@ -81,15 +79,16 @@ namespace MiningVehicle.SignalR.VehicleHub
             Console.WriteLine("Sended vehicle data to caller...");
         }
 
-        public async Task SendHeartbeatAsync()
-        {
-            await Clients.All.SendAsync("Heartbeat", DateTime.UtcNow);
-        }
-
         public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
         {   
             await Clients.All.SendAsync("ReceiveVehicleDataAsync", vehicleData);
             Console.WriteLine("Sended vehicle data to UI...");
         }
+
+        public Task Ping()
+        {
+            Console.WriteLine($"Ping received from client at {DateTime.UtcNow}");
+            return Task.CompletedTask;
+        }    
     }
 }

@@ -31,7 +31,7 @@ namespace MiningVehicle.VehicleEmulator
         public void StartEngine()
         {
             _timer.Start();
-            _miningVehicleClient.ConnectAsync();
+            _miningVehicleClient.ConnectAsync().Wait();
 
             Console.WriteLine("Checking battery status...");
             _battery.CheckBatteryStatus();
@@ -48,6 +48,8 @@ namespace MiningVehicle.VehicleEmulator
 
         public void StopEngine()
         {
+            _timer.Stop();
+         
             Console.WriteLine("Stopping the engine...\n");
             _motor.StopMotor();
         }
