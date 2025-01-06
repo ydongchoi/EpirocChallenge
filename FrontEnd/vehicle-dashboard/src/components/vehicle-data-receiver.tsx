@@ -5,7 +5,7 @@ import Gauge from './gauge';
 import BatteryGauge from 'react-battery-gauge';
 import { Indicator } from './indicator';
 import { AppBar, Toolbar, Typography, Box, Grid, Slider, Card, CardContent, CardHeader, BottomNavigation, BottomNavigationAction } from '@mui/material';
-import { Battery, Cog, Menu as MenuIcon, Omega, PlugZap } from 'lucide-react';
+import { Battery, Cog, Menu as MenuIcon, Omega, PlugZap, Thermometer } from 'lucide-react';
 
 const marks = [
   { value: -1, label: 'Off' },
@@ -36,7 +36,7 @@ const requestCharging = async () => {
     });
 
     console.log('request charging response: ', response);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -79,7 +79,7 @@ const VehicleDataReceiver: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const newConnection = new HubConnectionBuilder()
-        .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`, 
+        .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`,
           {
             transport: HttpTransportType.WebSockets,
             skipNegotiation: false
@@ -88,9 +88,9 @@ const VehicleDataReceiver: React.FC = () => {
         .configureLogging(LogLevel.Information)
         .withStatefulReconnect()
         .build();
-      
-        newConnection.serverTimeoutInMilliseconds = 300000;
-        newConnection.keepAliveIntervalInMilliseconds = 300000;
+
+      newConnection.serverTimeoutInMilliseconds = 300000;
+      newConnection.keepAliveIntervalInMilliseconds = 300000;
 
       console.log('newConnection: ', newConnection);
       console.log(newConnection.baseUrl);
@@ -100,7 +100,7 @@ const VehicleDataReceiver: React.FC = () => {
     };
 
     fetchData();
-  },[]);
+  }, []);
 
   useEffect(() => {
     if (connection) {
@@ -108,13 +108,13 @@ const VehicleDataReceiver: React.FC = () => {
         .then(() => {
           console.log('Connection started');
         })
-      .catch((error: any) => console.error('Connection failed: ', error));
-    
+        .catch((error: any) => console.error('Connection failed: ', error));
+
       connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
         connection.invoke('GetConnectionId').then((id: any) => {
           console.log('ConnectionId: ', id);
         });
-  
+
         console.log('Received message: ', message);
         setMessages(message);
       });
@@ -159,35 +159,41 @@ const VehicleDataReceiver: React.FC = () => {
           <Grid item xs={12} sm={6} md={2}>
             <Card style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <CardHeader title={<Typography variant="h6">Battery Level</Typography>} />
-              <CardContent>
+              <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <BatteryGauge value={(messages?.batteryData.percentage || 0) * 100} orientation='vertical' size={100} />
+                <Typography variant="h6" style={{ marginTop: '10px' }}>
+                    {messages?.batteryData.percentage ?? 0} %
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={2}>
             <Card style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <CardHeader title={<Typography variant="h6">Battery Temperature</Typography>} />
-              <CardContent>
-                <BatteryGauge value={(messages?.batteryData.temperature || 0) * 100} orientation='vertical' size={100} />
-              </CardContent>
+                <CardContent style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Thermometer size={100} />
+                <Typography variant="h6" style={{ marginTop: '10px' }}>
+                  {messages?.batteryData.temperature ?? 0} °C
+                </Typography>
+                </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={6}>
             <Card style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <CardHeader title={<Typography variant="h6">Speed Control</Typography>} />
               <CardContent style={{ width: '90%' }}>
-              <Slider
-                aria-label="Custom marks"
-                defaultValue={-1}
-                getAriaValueText={valuetext}
-                step={1}
-                valueLabelDisplay="auto"
-                marks={marks}
-                min={-1}
-                max={4}
-                style={{ width: '100%' }}
-                onChange={(event, value) => requestSpeed(event, value as number)}
-              />
+                <Slider
+                  aria-label="Custom marks"
+                  defaultValue={-1}
+                  getAriaValueText={valuetext}
+                  step={1}
+                  valueLabelDisplay="auto"
+                  marks={marks}
+                  min={-1}
+                  max={4}
+                  style={{ width: '100%' }}
+                  onChange={(event, value) => requestSpeed(event, value as number)}
+                />
               </CardContent>
             </Card>
           </Grid>
