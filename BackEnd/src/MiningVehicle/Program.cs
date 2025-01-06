@@ -18,11 +18,6 @@ builder.Services.AddMiningVehicle(builder.Configuration);
 
 // Hubs
 builder.Services.AddAzureSignalRHub(builder.Configuration);
-
-// builder.Services.AddSignalR(e => {
-//     e.EnableDetailedErrors = true;
-//     e.MaximumReceiveMessageSize = 102400000;
-// });
 builder.Services.AddSignalRClients(builder.Configuration);
 
 // Infrastructure
