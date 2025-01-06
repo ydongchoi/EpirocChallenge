@@ -213,7 +213,7 @@ If you encounter an issue where data is not showing during testing, follow these
 1. Press `F12` to open the developer console.
 2. Look for the message "connection started" in the console.
 
-![Example](https://github.com/user-attachments/assets/fc846492-b566-4285-9c23-79c3cd676c92)
+![image](https://github.com/user-attachments/assets/4cf69274-4e86-4601-8086-df65dda9cd2c)
 
 3. Press `F5` to refresh the page.
 4. Observe the speed control resetting to 0 and the battery showing 100%.
