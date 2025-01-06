@@ -6,7 +6,6 @@ namespace MiningVehicle.VehicleEmulator.Components
     public class Motor
     {
         // Configuration
-        private readonly IOptions<MotorConfiguration> _motorConfigurationOptions;
         private readonly MotorConfiguration _motorConfiguration;
 
         // Dependencies
@@ -20,9 +19,9 @@ namespace MiningVehicle.VehicleEmulator.Components
         public int Rpm { get; private set; }
         public MotorStatus Status { get; private set; }
         private int speed;
-        public int Speed // 0 -> 1 100rpm 10kw -> 2 200rpm 20kw -> 3 400rpm 30kw -> 4 800rpm 40kw per hour.
+        public int Speed
         {
-            get { return speed; }
+            get => speed;
             set
             {
                 if (value < 0 || value > 4)
@@ -32,13 +31,10 @@ namespace MiningVehicle.VehicleEmulator.Components
                 speed = value;
             }
         }
-        
 
         public Motor(IOptions<MotorConfiguration> motorConfigurationOption, Battery battery)
         {
-            _motorConfigurationOptions = motorConfigurationOption;
-            _motorConfiguration = _motorConfigurationOptions.Value;
-
+            _motorConfiguration = motorConfigurationOption.Value;
             _battery = battery;
 
             NominalPower = _motorConfiguration.NominalPower;
@@ -66,11 +62,19 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void AdjustSpeed(int speed)
         {   
-            if(speed == -1) Status = MotorStatus.Off;
-            else if(speed == 0) Status = MotorStatus.Idle;
-            else Status = MotorStatus.Running;
-            
-            this.speed = speed;
+            if (speed == -1) 
+            {
+                StopMotor();
+                return;
+            }
+
+            Status = speed switch
+            {
+                0 => MotorStatus.Idle,
+                _ => MotorStatus.Running
+            };
+
+            Speed = speed;
 
             int targetRpm = CalculateTargetRpm(speed);
             Rpm = (int)Lerp(Rpm, targetRpm, 0.1);
@@ -78,28 +82,20 @@ namespace MiningVehicle.VehicleEmulator.Components
             double power = CalculatePower();
             _battery.DischargeBattery(power, Status);
 
-            if(_battery.Status == BatteryStatus.Off){
+            if (_battery.Status == BatteryStatus.Off)
+            {
                 StopMotor();
-                return;
             }
         }
 
-        /// <summary>
-        /// Calculates the target RPM (Revolutions Per Minute) based on the given speed.
-        /// </summary>
-        /// <param name="speed">The speed at which the vehicle is moving.</param>
-        /// <returns>The calculated target RPM.</returns>
         private int CalculateTargetRpm(int speed)
         {
             return 100 * (int)Math.Pow(2, speed - 1);
         }
 
-        /// <summary>
-        /// Calculates the power required to maintain the given speed.
-        /// </summary>
         private double CalculatePower()
         {
-            if(Rpm == 0)
+            if (Rpm == 0)
             {
                 return 0;
             }
@@ -112,10 +108,7 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         private double Lerp(double current, double target, double t)
         {
-            double delta = target - current;
-            current = current + delta * t * 3;
-
-            return current;
+            return current + (target - current) * t * 3;
         }
 
         public void StopMotor()
