@@ -208,6 +208,6 @@ By following these steps, you will have the development environment set up and r
 
 ## Issue
 
-When you do test, there is some error not showing data. Press F12 and see the message "connection started" in the console. Then press F5, and the speed control goes to 0, and you see the battery at 100%. Then start it. Note that Azure SignalR is on the free tier, which allows up to 20,000 messages per day.
+When you do test, there is some error not showing data. Press F12 and see the message "connection started" in the console. Then press F5, and the speed control goes to 0, and you see the battery at 100%. This behavior might be due to a delay of about 5 seconds while connecting to SignalHub. Then start it. Note that Azure SignalR is on the free tier, which allows up to 20,000 messages per day.
 
 If you have any questions, contact me at yeongdong.choi7@gmail.com.
