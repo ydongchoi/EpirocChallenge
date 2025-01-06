@@ -10,7 +10,7 @@ The Epiroc Challenge project simulates vehicle data transmission and visualizati
 
 ## Video Demonstration
 
-https://github.com/user-attachments/assets/9c96cdc8-f01c-4e7d-aeb5-64c91d0b1fc2
+https://github.com/user-attachments/assets/b76089d3-0efb-4ed7-bfe4-b86d76cd3638
 
 ## Flow
 
