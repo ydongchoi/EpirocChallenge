@@ -1,4 +1,3 @@
-
 using MiningVehicle.VehicleEmulator;
 
 namespace MiningVehicle.API.Services
@@ -13,14 +12,18 @@ namespace MiningVehicle.API.Services
         }
 
         public async Task AdjustSpeed(int speed)
-        {   if(speed == -1){
-                _miningVehicleEmulator.StopEngine();
-            }
-            else if(speed == 0)
+        {
+            switch (speed)
             {
-                _miningVehicleEmulator.StartEngine();
+                // TODO : Refactor this to use an enum
+                case -1:
+                    _miningVehicleEmulator.StopEngine();
+                    break;
+                case 0:
+                    _miningVehicleEmulator.StartEngine();
+                    break;
             }
-            
+
             await _miningVehicleEmulator.AdjustSpeed(speed);
         }
 
