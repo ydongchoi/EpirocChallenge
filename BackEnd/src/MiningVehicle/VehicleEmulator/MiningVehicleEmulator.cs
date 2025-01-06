@@ -50,6 +50,7 @@ namespace MiningVehicle.VehicleEmulator
         {
             Console.WriteLine("Stopping the engine...\n");
             _motor.StopMotor();
+            _battery.PowerOff();
         }
 
         public async Task AdjustSpeed(int speed)

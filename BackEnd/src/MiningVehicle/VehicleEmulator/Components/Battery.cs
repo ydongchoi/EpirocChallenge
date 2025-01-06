@@ -99,6 +99,10 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void UpdateTemperature(double charge)
         {
+            if(Status == BatteryStatus.Off){
+                Temperature = 0;
+                return;
+            }
             charge = Math.Abs(charge);
             
             double power = charge / Efficiency;
@@ -116,6 +120,12 @@ namespace MiningVehicle.VehicleEmulator.Components
             else {
                 Temperature = Math.Max(0, Temperature - 0.02);
             }
+        }
+
+        public void PowerOff()
+        {
+            Status = BatteryStatus.Off;
+            Power = 0;
         }
     }
 

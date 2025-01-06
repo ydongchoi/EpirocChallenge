@@ -13,8 +13,10 @@ namespace MiningVehicle.API.Services
         }
 
         public async Task AdjustSpeed(int speed)
-        {
-            if(speed == 0)
+        {   if(speed == -1){
+                _miningVehicleEmulator.StopEngine();
+            }
+            else if(speed == 0)
             {
                 _miningVehicleEmulator.StartEngine();
             }
