@@ -23,7 +23,6 @@ namespace MiningVehicle.VehicleEmulator
             _motor = motor;
 
             _miningVehicleClient = miningVehicleClient;
-            _miningVehicleClient.ConnectAsync();
         
             _timer = new System.Timers.Timer(100);
             _timer.Elapsed += OnTimedEvent;
@@ -32,6 +31,7 @@ namespace MiningVehicle.VehicleEmulator
         public void StartEngine()
         {
             _timer.Start();
+            _miningVehicleClient.ConnectAsync();
 
             Console.WriteLine("Checking battery status...");
             _battery.CheckBatteryStatus();
