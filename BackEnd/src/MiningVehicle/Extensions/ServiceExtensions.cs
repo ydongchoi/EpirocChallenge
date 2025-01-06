@@ -16,11 +16,6 @@ namespace MiningVehicle.Extensions
             {
                 options.AddPolicy("AllowReactApp", builder =>
                 {
-                    var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                    var reactAppUrl = environment == "Development"
-                        ? "http://localhost:5173"
-                        : "https://happy-river-0f3b0221e.4.azurestaticapps.net";
-
                     builder
                         .AllowAnyMethod()
                         .AllowAnyHeader()
@@ -32,35 +27,25 @@ namespace MiningVehicle.Extensions
         public static void AddAzureSignalRHub(this IServiceCollection services, IConfiguration configuration)
         {
             var azureSignalrConnectionString = Environment.GetEnvironmentVariable("SignalR_ConnectionString");
-       
+
             services
-                .AddSignalR(
-                    opt => {
-                        opt.KeepAliveInterval = TimeSpan.FromSeconds(60);
-                    }
-                )
-                .AddAzureSignalR(
-                    opt => {
-                        opt.ConnectionString = azureSignalrConnectionString;
-                        opt.MaxHubServerConnectionCount = 10;
-                    }                
-                );
+                .AddSignalR(opt => opt.KeepAliveInterval = TimeSpan.FromSeconds(60))
+                .AddAzureSignalR(opt =>
+                {
+                    opt.ConnectionString = azureSignalrConnectionString;
+                    opt.MaxHubServerConnectionCount = 10;
+                });
         }
 
         public static IServiceCollection AddSignalRClients(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<HubConnection>(provider =>
             {
-                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-                var hubUrl = environment == "Development"
-                    ? "http://localhost:5140/vehicleDataHub"
-                    : "https://mining-vehicle.azurewebsites.net/vehicleDataHub";
-
+                var hubUrl = GetHubUrl();
                 Console.WriteLine($"Hub URL: {hubUrl}");
 
                 var hubConnection = new HubConnectionBuilder()
-                    .WithUrl("https://mining-vehicle.azurewebsites.net/vehicleDataHub", 
-                    options =>
+                    .WithUrl(hubUrl, options =>
                     {
                         options.Transports = HttpTransportType.WebSockets;
                         options.SkipNegotiation = false;
@@ -94,6 +79,14 @@ namespace MiningVehicle.Extensions
             services.AddSingleton<Battery>();
             services.AddSingleton<Motor>();
             services.AddSingleton<IMiningVehicleEmulator, MinigVehicleEmulator>();
+        }
+
+        private static string GetHubUrl()
+        {
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            return environment == "Development"
+                ? "http://localhost:5140/vehicleDataHub"
+                : "https://mining-vehicle.azurewebsites.net/vehicleDataHub";
         }
     }
 }
