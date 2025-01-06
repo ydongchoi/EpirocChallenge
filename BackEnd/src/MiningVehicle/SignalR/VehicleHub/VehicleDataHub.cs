@@ -66,7 +66,7 @@ namespace MiningVehicle.SignalR.VehicleHub
             await SendVehicleDataToUIAsync(vehicleData);
         
             _vehicleData.Add(vehicleDataInfrastructure);
-
+            Console.WriteLine($"{_vehicleData.Count} vehicle data saved to list...");
             if(_vehicleData.Count > 50){
                 await _vehicleDataRepository.AddVehicleDataAsync(_vehicleData);
                 Console.WriteLine("Saved vehicle data to database...");
