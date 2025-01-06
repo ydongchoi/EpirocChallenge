@@ -150,7 +150,7 @@ const VehicleDataReceiver: React.FC = () => {
         <Grid container item spacing={2}>
           <Grid item xs={12} sm={6} md={2}>
             <Card style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <CardHeader title={<Typography variant="h6">Gear Ratio</Typography>} />
+              <CardHeader title={<Typography variant="h6">Gear Ratio 1:6</Typography>} />
               <CardContent>
                 <Cog size={100} />
               </CardContent>
