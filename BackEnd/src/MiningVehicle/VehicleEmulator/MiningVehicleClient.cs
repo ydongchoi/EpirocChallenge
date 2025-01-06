@@ -16,6 +16,8 @@ namespace MiningVehicle.VehicleEmulator
         {
             try
             {
+                if(_connection.State == HubConnectionState.Connected) return;
+
                 await _connection.StartAsync();
                 Console.WriteLine("SignalR client connected.\n");
             }
