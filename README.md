@@ -206,8 +206,19 @@ By following these steps, you will have the development environment set up and r
 - **Backend Testing**: Use xUnit for writing and running tests.
 - **Frontend Testing**: Use Jest for writing and running tests.
 
-## Issue
+## Troubleshooting
 
-When you do test, there is some error not showing data. Press F12 and see the message "connection started" in the console. Then press F5, and the speed control goes to 0, and you see the battery at 100%. This behavior might be due to a delay of about 5 seconds while connecting to SignalHub. Then start it. Note that Azure SignalR is on the free tier, which allows up to 20,000 messages per day.
+If you encounter an issue where data is not showing during testing, follow these steps:
+
+1. Press `F12` to open the developer console.
+2. Look for the message "connection started" in the console.
+
+![Example](https://github.com/user-attachments/assets/fc846492-b566-4285-9c23-79c3cd676c92)
+
+3. Press `F5` to refresh the page.
+4. Observe the speed control resetting to 0 and the battery showing 100%.
+
+This behavior might be due to a delay of about 5 seconds while connecting to SignalHub. Note that Azure SignalR on the free tier allows up to 20,000 messages per day.
 
 If you have any questions, contact me at yeongdong.choi7@gmail.com.
+
