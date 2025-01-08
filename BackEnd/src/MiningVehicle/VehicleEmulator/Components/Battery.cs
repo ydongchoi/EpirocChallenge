@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using MiningVehicle.Logger;
 using MiningVehicle.VehicleEmulator.ConfigurationModels;
 
 namespace MiningVehicle.VehicleEmulator.Components
@@ -7,7 +8,8 @@ namespace MiningVehicle.VehicleEmulator.Components
     {
         // Configuration
         private readonly BatteryConfiguration _batteryConfiguration;
-        
+        private readonly ILoggerManager _logger;
+
         // Properties
         public double Capacity { get; private set; }
         public double Charge { get; private set; }
@@ -19,9 +21,12 @@ namespace MiningVehicle.VehicleEmulator.Components
         public double Temperature { get; private set; }
 
         // Constructor
-        public Battery(IOptions<BatteryConfiguration> batteryConfigurationOptions)
+        public Battery(
+            IOptions<BatteryConfiguration> batteryConfigurationOptions,
+            ILoggerManager logger)
         {
             _batteryConfiguration = batteryConfigurationOptions.Value;
+            _logger = logger;
 
             Capacity = _batteryConfiguration.Capacity;
             Charge = _batteryConfiguration.Charge;
@@ -37,15 +42,15 @@ namespace MiningVehicle.VehicleEmulator.Components
             if (Percentage < 0.2)
             {
                 Status = BatteryStatus.Warning;
-                Console.WriteLine("Battery is low and in warning state\n");
+                _logger.LogWarning("Battery is low and in warning state");
             }
             if (Percentage < 0.01)
             {
                 Status = BatteryStatus.Off;
-                throw new Exception("Battery is empty and needs to be charged\n");
+                _logger.LogWarning("Battery is empty and in off state");
             }
 
-            Console.WriteLine("Battery is OK\n");
+            _logger.LogInformation("Battery is OK");
             return true;
         }
 
@@ -61,7 +66,7 @@ namespace MiningVehicle.VehicleEmulator.Components
             {
                 Charge = Capacity;
                 Status = BatteryStatus.Full;
-                Console.WriteLine("Battery is full\n");
+                _logger.LogInformation("Battery is full");
             }
         }
 
@@ -87,9 +92,9 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void CheckCurrentBattery()
         {
-            Console.WriteLine($"Battery Charge: {Charge}, Battery Status: {Status}, Power: {Power}");
-            Console.WriteLine($"Battery Temperature: {Temperature}");
-            Console.WriteLine($"Battery Percentage: {Percentage * 100}%\n");
+            _logger.LogInformation($"Battery Charge: {Charge}, Battery Status: {Status}, Power: {Power}");
+            _logger.LogInformation($"Battery Temperature: {Temperature}");
+            _logger.LogInformation($"Battery Percentage: {Percentage * 100}%\n");
         }
 
         private void UpdateTemperature(double charge)
