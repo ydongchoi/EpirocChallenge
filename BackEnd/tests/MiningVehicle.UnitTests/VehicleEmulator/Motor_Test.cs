@@ -3,6 +3,7 @@ using Moq;
 using Microsoft.Extensions.Options;
 using MiningVehicle.VehicleEmulator.ConfigurationModels;
 using MiningVehicle.VehicleEmulator.Components;
+using MiningVehicle.Logger;
 
 namespace MiningVehicle.UnitTests.VehicleEmulator
 {
@@ -10,14 +11,15 @@ namespace MiningVehicle.UnitTests.VehicleEmulator
     {
         private readonly IOptions<BatteryConfiguration> _batteryConfigurationOptions;
         private readonly IOptions<MotorConfiguration> _motorConfigurationOptions;
+        private readonly ILoggerManager _logger;
 
         private readonly Mock<Battery> _mockBattery;
         private readonly Motor _motor;
 
         public Motor_Test()
         {
-            _mockBattery = new Mock<Battery>(_batteryConfigurationOptions);
-            _motor = new Motor(_motorConfigurationOptions, _mockBattery.Object);
+            _mockBattery = new Mock<Battery>(_batteryConfigurationOptions, _logger);
+            _motor = new Motor(_motorConfigurationOptions, _logger, _mockBattery.Object);
         }
         
         [Fact]

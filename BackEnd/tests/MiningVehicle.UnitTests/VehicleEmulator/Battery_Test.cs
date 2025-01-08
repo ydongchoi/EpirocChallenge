@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using MiningVehicle.Logger;
 using MiningVehicle.VehicleEmulator.Components;
 using MiningVehicle.VehicleEmulator.ConfigurationModels;
 using Xunit;
@@ -8,13 +9,14 @@ namespace MiningVehicle.UnitTests.VehicleEmulator
     public class Battery_Test
     {
         private readonly IOptions<BatteryConfiguration> _batteryConfigurationOptions;
-        
+        private readonly ILoggerManager _logger;
         private readonly Battery _battery;
 
         public Battery_Test(IOptions<BatteryConfiguration> batteryConfigurationOptions)
         {
             _batteryConfigurationOptions = batteryConfigurationOptions;
-            _battery = new Battery(_batteryConfigurationOptions);
+            _logger = new LoggerManager();
+            _battery = new Battery(_batteryConfigurationOptions, _logger);
         }
 
         [Fact]
