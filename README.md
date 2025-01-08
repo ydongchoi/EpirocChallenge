@@ -172,6 +172,11 @@ To set up the necessary Azure services for the Epiroc Challenge project, follow 
 3. **Configure SignalR in `appsettings.json`**:
     - Open the `appsettings.json` file in your backend project.
     - Add the SignalR connection string under the appropriate section.
+  
+4. **Eaxmple Image`**:
+    - You can check the message count in the Azure SignalR dashboard.
+   ![image](https://github.com/user-attachments/assets/4cbc54a2-d036-4d0d-aa76-0870f8b69d70)
+
 
 ### Azure Cosmos DB for MongoDB
 
@@ -192,6 +197,12 @@ To set up the necessary Azure services for the Epiroc Challenge project, follow 
 4. **Configure Cosmos DB in `appsettings.json`**:
     - Open the `appsettings.json` file in your backend project.
     - Add the Cosmos DB connection string under the appropriate section.
+
+5. **Eaxmple Image`**:
+   - You can view the data stored in Azure Cosmos DB for MongoDB.
+    ![image](https://github.com/user-attachments/assets/00046426-6788-427d-98d8-595d6cb3f593)
+
+
 
 By following these steps, you will have the necessary Azure services configured and integrated with your Epiroc Challenge project.
 
