@@ -19,12 +19,9 @@ namespace MiningVehicle.VehicleEmulator
             IRepository vehicleDataRepository, 
             ILoggerManager logger)
         {
-            _connection = connection;
-            
-            _vehicleDataRepository = vehicleDataRepository;
-            
+            _connection = connection;            
+            _vehicleDataRepository = vehicleDataRepository;            
             _logger = logger;
-
             _vehicleData = new List<MiningVehicle.Infrastructure.Models.VehicleData>();
 
             _timer = new System.Timers.Timer(30000);
@@ -106,6 +103,7 @@ namespace MiningVehicle.VehicleEmulator
             {
                 await _vehicleDataRepository.AddVehicleDataAsync(_vehicleData);
                 _logger.LogInformation("Saved vehicle data to database...");
+               
                 _vehicleData.Clear();
             }
         }
