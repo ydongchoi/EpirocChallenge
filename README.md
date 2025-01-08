@@ -26,6 +26,8 @@ This flow ensures real-time data visualization and efficient data handling for t
 
 ## Specifications
 
+This specification is defined in the appsettings.json file.
+
 ### Motor Configuration
 
 The motor configuration defines the key parameters for the vehicle's motor performance. Below is the JSON representation of the motor configuration:
