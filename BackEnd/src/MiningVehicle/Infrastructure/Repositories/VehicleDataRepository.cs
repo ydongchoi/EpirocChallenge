@@ -1,5 +1,6 @@
 using MiningVehicle.Infrastructure.Data;
 using MiningVehicle.Infrastructure.Models;
+using MiningVehicle.Logger;
 using MongoDB.Driver;
 
 namespace MiningVehicle.Infrastructure.Repositories
@@ -7,12 +8,16 @@ namespace MiningVehicle.Infrastructure.Repositories
     public class VehicleDataRepository : IRepository
     {
         private readonly IMongoCollection<VehicleData> _vehicleDataCollection;
+        private readonly ILoggerManager _logger;
 
-        public VehicleDataRepository(MongoDbContext mongoDbContext)
+        public VehicleDataRepository(
+            MongoDbContext mongoDbContext,
+            ILoggerManager logger)
         {
-            Console.WriteLine("VehicleDataRepository constructor");
             _vehicleDataCollection = mongoDbContext.GetCollection<VehicleData>("VehicleData");
-            Console.WriteLine(_vehicleDataCollection);
+            _logger = logger;
+         
+            logger.LogInformation($"VehicleDataCollection: {_vehicleDataCollection.CollectionNamespace.CollectionName}");
         }
 
         public async Task AddVehicleDataAsync(List<VehicleData> vehicleDataList)
@@ -25,9 +30,8 @@ namespace MiningVehicle.Infrastructure.Repositories
                 bulkOps.Add(insertOne);
             }
 
-            Console.WriteLine($"Adding vehicle data to database...");
-            await _vehicleDataCollection.BulkWriteAsync(bulkOps);
-            Console.WriteLine("Saved to database...");
+            await _vehicleDataCollection.BulkWriteAsync(bulkOps);          
+            _logger.LogInformation("Added vehicle data to database...");
         }
     }
 }

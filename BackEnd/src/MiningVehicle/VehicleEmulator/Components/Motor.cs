@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using MiningVehicle.Logger;
 using MiningVehicle.VehicleEmulator.ConfigurationModels;
 
 namespace MiningVehicle.VehicleEmulator.Components
@@ -7,6 +8,7 @@ namespace MiningVehicle.VehicleEmulator.Components
     {
         // Configuration
         private readonly MotorConfiguration _motorConfiguration;
+        private readonly ILoggerManager _logger;
 
         // Dependencies
         private readonly Battery _battery;
@@ -32,9 +34,13 @@ namespace MiningVehicle.VehicleEmulator.Components
             }
         }
 
-        public Motor(IOptions<MotorConfiguration> motorConfigurationOption, Battery battery)
+        public Motor(
+            IOptions<MotorConfiguration> motorConfigurationOption,
+            ILoggerManager logger, 
+            Battery battery)
         {
             _motorConfiguration = motorConfigurationOption.Value;
+            _logger = logger;
             _battery = battery;
 
             NominalPower = _motorConfiguration.NominalPower;
@@ -48,16 +54,17 @@ namespace MiningVehicle.VehicleEmulator.Components
         {
             if (Status == MotorStatus.Fault)
             {
+                _logger.LogError("Motor is in fault state");
                 throw new Exception("Motor is in fault state");
             }
 
-            Console.WriteLine("Motor is OK");
+            _logger.LogInformation("Motor is OK");
         }
 
         public void StartMotor()
         {
-            Console.WriteLine("Starting motor...\n");
             Status = MotorStatus.Idle;
+            _logger.LogInformation("Starting motor...");
         }
 
         public void AdjustSpeed(int speed)
@@ -113,15 +120,15 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void StopMotor()
         {
-            Console.WriteLine("Stopping motor...\n");
             Rpm = 0;
             Status = MotorStatus.Off;
+            _logger.LogInformation("Motor stopped");
         }
 
         private void WarnMotor()
         {
-            Console.WriteLine("Motor is in warning state\n");
             Status = MotorStatus.Warning;
+            _logger.LogWarning("Motor is in warning state");
         }
     }
 
