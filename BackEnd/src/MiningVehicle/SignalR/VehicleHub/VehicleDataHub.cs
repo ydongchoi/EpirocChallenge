@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.SignalR;
 using MiningVehicle.Infrastructure.Repositories;
+using MiningVehicle.Logger;
 using MiningVehicle.SignalR.VehicleHub.Models;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 
 namespace MiningVehicle.SignalR.VehicleHub
 {
@@ -11,9 +10,14 @@ namespace MiningVehicle.SignalR.VehicleHub
     {
         private readonly IRepository _vehicleDataRepository;
 
-        public VehicleDataHub(IRepository vehicleDataRepository)
+        private readonly ILoggerManager _logger;
+
+        public VehicleDataHub(
+            IRepository vehicleDataRepository,
+            ILoggerManager logger)
         {
             _vehicleDataRepository = vehicleDataRepository;
+            _logger = logger;
         }
 
         public string GetConnectionId() => Context.ConnectionId;
@@ -25,36 +29,36 @@ namespace MiningVehicle.SignalR.VehicleHub
             await SendVehicleDataToUIAsync(vehicleData);
 
             await Clients.Caller.SendAsync("ReceiveVehicleData", vehicleData);
-            Console.WriteLine("Sent vehicle data to caller...");
+            _logger.LogInformation("Sent vehicle data to caller...");
         }
 
         private void LogVehicleData(VehicleData vehicleData)
         {
-            Console.WriteLine("Received vehicle data...");
-            Console.WriteLine($"Timestamp: {vehicleData.Timestamp}");
-            Console.WriteLine($"Status: {vehicleData.MotorData.Status}");
-            Console.WriteLine($"Rpm: {vehicleData.MotorData.Rpm}");
-            Console.WriteLine($"Speed: {vehicleData.MotorData.Speed}");
-            Console.WriteLine($"Gear Ratio: {vehicleData.MotorData.GearRatio}");
-            Console.WriteLine($"Battery Status: {vehicleData.BatteryData.Status}");
-            Console.WriteLine($"Battery Capacity: {vehicleData.BatteryData.Capacity}");
-            Console.WriteLine($"Battery Charge: {vehicleData.BatteryData.Charge}");
-            Console.WriteLine($"Battery Charging Rate: {vehicleData.BatteryData.ChargingRate}");
-            Console.WriteLine($"Battery Efficiency: {vehicleData.BatteryData.Efficiency}");
-            Console.WriteLine($"Battery Percentage: {vehicleData.BatteryData.Percentage}");
-            Console.WriteLine($"Battery Power: {vehicleData.BatteryData.Power}");
-            Console.WriteLine($"Battery Temperature: {vehicleData.BatteryData.Temperature}");
+            _logger.LogInformation("Received vehicle data...");
+            _logger.LogInformation($"Timestamp: {vehicleData.Timestamp}");
+            _logger.LogInformation($"Status: {vehicleData.MotorData.Status}");
+            _logger.LogInformation($"Rpm: {vehicleData.MotorData.Rpm}");
+            _logger.LogInformation($"Speed: {vehicleData.MotorData.Speed}");
+            _logger.LogInformation($"Gear Ratio: {vehicleData.MotorData.GearRatio}");
+            _logger.LogInformation($"Battery Status: {vehicleData.BatteryData.Status}");
+            _logger.LogInformation($"Battery Capacity: {vehicleData.BatteryData.Capacity}");
+            _logger.LogInformation($"Battery Charge: {vehicleData.BatteryData.Charge}");
+            _logger.LogInformation($"Battery Charging Rate: {vehicleData.BatteryData.ChargingRate}");
+            _logger.LogInformation($"Battery Efficiency: {vehicleData.BatteryData.Efficiency}");
+            _logger.LogInformation($"Battery Percentage: {vehicleData.BatteryData.Percentage}");
+            _logger.LogInformation($"Battery Power: {vehicleData.BatteryData.Power}");
+            _logger.LogInformation($"Battery Temperature: {vehicleData.BatteryData.Temperature}");
         }
 
         public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
         {
             await Clients.All.SendAsync("ReceiveVehicleDataAsync", vehicleData);
-            Console.WriteLine("Sent vehicle data to UI...");
+            _logger.LogInformation("Sent vehicle data to UI...");
         }
 
         public Task Ping()
         {
-            Console.WriteLine($"Ping received from client at {DateTime.UtcNow}");
+            _logger.LogInformation("Ping received from client...");
             return Task.CompletedTask;
         }
     }
