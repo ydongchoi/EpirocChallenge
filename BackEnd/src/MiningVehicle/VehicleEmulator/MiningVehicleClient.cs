@@ -1,6 +1,7 @@
 using System.Timers;
 using Microsoft.AspNetCore.SignalR.Client;
 using MiningVehicle.Infrastructure.Repositories;
+using MiningVehicle.Logger;
 using MiningVehicle.VehicleEmulator.Models;
 
 namespace MiningVehicle.VehicleEmulator
@@ -9,13 +10,21 @@ namespace MiningVehicle.VehicleEmulator
     {
         private readonly HubConnection _connection;
         private readonly IRepository _vehicleDataRepository;
+        private readonly ILoggerManager _logger;
         private List<MiningVehicle.Infrastructure.Models.VehicleData> _vehicleData;
         private System.Timers.Timer _timer;
 
-        public MiningVehicleClient(HubConnection connection, IRepository vehicleDataRepository)
+        public MiningVehicleClient(
+            HubConnection connection, 
+            IRepository vehicleDataRepository, 
+            ILoggerManager logger)
         {
             _connection = connection;
+            
             _vehicleDataRepository = vehicleDataRepository;
+            
+            _logger = logger;
+
             _vehicleData = new List<MiningVehicle.Infrastructure.Models.VehicleData>();
 
             _timer = new System.Timers.Timer(30000);
@@ -29,11 +38,11 @@ namespace MiningVehicle.VehicleEmulator
             try
             {
                 await _connection.StartAsync();
-                Console.WriteLine("SignalR client connected.\n");
+                _logger.LogInformation("SignalR client connected.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex}");
+                _logger.LogError($"Error: {ex}");
             }
         }
 
@@ -42,24 +51,24 @@ namespace MiningVehicle.VehicleEmulator
             try
             {
                 await _connection.InvokeAsync("SendVehicleDataAsync", vehicleData);
-                Console.WriteLine("Sent vehicle data...");
+                _logger.LogInformation("Sent vehicle data...");
 
                 _connection.On<VehicleData>("ReceiveVehicleData", async (data) =>
                 {
                     await SaveDataToVehicleRepository(data);
-                    Console.WriteLine($"Received From Client Successfully: {data}");
+                    _logger.LogInformation($"Received From Client Successfully: {data}");
                 });
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex}");
+                _logger.LogError($"Error: {ex}");
             }
         }
 
         public async Task DisconnectAsync()
         {
             await _connection.StopAsync();
-            Console.WriteLine("SignalR client disconnected.\n");
+            _logger.LogInformation("SignalR client disconnected.");
         }
 
         private async Task SaveDataToVehicleRepository(VehicleData vehicleData)
@@ -92,12 +101,11 @@ namespace MiningVehicle.VehicleEmulator
             };
 
             _vehicleData.Add(vehicleDataInfrastructure);
-            Console.WriteLine($"{_vehicleData.Count} vehicle data saved to list...");
-
+         
             if (_vehicleData.Count > 50)
             {
                 await _vehicleDataRepository.AddVehicleDataAsync(_vehicleData);
-                Console.WriteLine("Saved vehicle data to database...");
+                _logger.LogInformation("Saved vehicle data to database...");
                 _vehicleData.Clear();
             }
         }
@@ -109,11 +117,11 @@ namespace MiningVehicle.VehicleEmulator
                 try
                 {
                     _connection.InvokeAsync("Ping").Wait();
-                    Console.WriteLine("Ping sent to server.");
+                    _logger.LogInformation("Ping sent to server.");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Ping failed: {ex.Message}");
+                    _logger.LogError($"Ping failed: {ex.Message}");
                 }
             }
         }

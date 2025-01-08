@@ -3,9 +3,9 @@ using MiningVehicle.Infrastructure.ConfigurationModels;
 using MiningVehicle.VehicleEmulator;
 using MiningVehicle.Infrastructure.Data;
 using MiningVehicle.VehicleEmulator.Components;
-using System.Text.Json;
 using MiningVehicle.VehicleEmulator.ConfigurationModels;
 using Microsoft.AspNetCore.Http.Connections;
+using MiningVehicle.Logger;
 
 namespace MiningVehicle.Extensions
 {
@@ -69,6 +69,11 @@ namespace MiningVehicle.Extensions
         {
             services.Configure<MongoDbConfiguration>(configuration.GetSection("MongoDbConfiguration"));
             services.AddSingleton<MongoDbContext>();
+        }
+
+        public static void ConfigureLoggerManager(this IServiceCollection services)
+        {  
+            services.AddSingleton<ILoggerManager, LoggerManager>();
         }
 
         public static void AddMiningVehicle(this IServiceCollection services, IConfiguration configuration)

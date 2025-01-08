@@ -1,4 +1,5 @@
 using System.Timers;
+using MiningVehicle.Logger;
 using MiningVehicle.VehicleEmulator.Components;
 using MiningVehicle.VehicleEmulator.Models;
 
@@ -12,15 +13,22 @@ namespace MiningVehicle.VehicleEmulator
 
         // SignalR
         private readonly IMiningVehicleClient _miningVehicleClient;
+        private readonly ILoggerManager _logger;
 
         private int _speed;
         private System.Timers.Timer _timer;
 
-        public MiningVehicleEmulator(Battery battery, Motor motor, IMiningVehicleClient miningVehicleClient)
+        public MiningVehicleEmulator(
+            Battery battery, 
+            Motor motor, 
+            IMiningVehicleClient miningVehicleClient,
+            ILoggerManager logger)
         {
             _battery = battery ?? throw new ArgumentNullException(nameof(battery));
             _motor = motor ?? throw new ArgumentNullException(nameof(motor));
+
             _miningVehicleClient = miningVehicleClient ?? throw new ArgumentNullException(nameof(miningVehicleClient));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             _timer = new System.Timers.Timer(100);
             _timer.Elapsed += OnTimedEvent;
@@ -31,13 +39,13 @@ namespace MiningVehicle.VehicleEmulator
             _timer.Start();
             _miningVehicleClient.ConnectAsync().Wait();
 
-            Console.WriteLine("Checking battery status...");
+            _logger.LogInformation("Checking battery status...");
             _battery.CheckBatteryStatus();
 
-            Console.WriteLine("Checking motor status...");
+            _logger.LogInformation("Checking motor status...");
             _motor.CheckMotorStatus();
 
-            Console.WriteLine("Condition check passed, starting the engine...\n");
+            _logger.LogInformation("Condition check passed, starting the engine...");
             _motor.StartMotor();
 
             SendVehicleDataAsync().Wait();
@@ -45,7 +53,7 @@ namespace MiningVehicle.VehicleEmulator
 
         public void StopEngine()
         {
-            Console.WriteLine("Stopping the engine...\n");
+            _logger.LogInformation("Stopping the engine...");
             _motor.StopMotor();
             _battery.PowerOff();
         }
@@ -54,7 +62,7 @@ namespace MiningVehicle.VehicleEmulator
         {
             if (_motor.Status == MotorStatus.Off) StartEngine();
 
-            Console.WriteLine($"Adjusting speed to {speed}...\n");
+            _logger.LogInformation($"Adjusting speed to {speed}...");
             _speed = speed;
             _motor.AdjustSpeed(speed);
             _battery.CheckCurrentBattery();
@@ -64,13 +72,13 @@ namespace MiningVehicle.VehicleEmulator
 
         public void Break()
         {
-            Console.WriteLine("Breaking...\n");
+            _logger.LogInformation("Breaking...");
             _motor.StopMotor();
         }
 
         public async Task ChargeBattery()
         {
-            Console.WriteLine("Charging battery...\n");
+            _logger.LogInformation("Charging battery...");
             _battery.ChargeBattery();
 
             await SendVehicleDataAsync();
@@ -78,7 +86,7 @@ namespace MiningVehicle.VehicleEmulator
 
         public async Task StopBatteryCharging()
         {
-            Console.WriteLine("Stopping battery charging...\n");
+            _logger.LogInformation("Stopping battery charging...");
             _battery.PowerOff();
 
             await SendVehicleDataAsync();

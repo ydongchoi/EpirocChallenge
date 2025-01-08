@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configuration
 builder.Services.ConfigureCors();
+builder.Services.ConfigureLoggerManager();
 
 // API
 builder.Services.AddScoped<IVehicleService, VehicleService>();

@@ -7,7 +7,7 @@ namespace MiningVehicle.VehicleEmulator.Components
     {
         // Configuration
         private readonly BatteryConfiguration _batteryConfiguration;
-
+        
         // Properties
         public double Capacity { get; private set; }
         public double Charge { get; private set; }
