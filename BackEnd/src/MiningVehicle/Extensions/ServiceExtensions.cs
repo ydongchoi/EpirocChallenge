@@ -56,7 +56,6 @@ namespace MiningVehicle.Extensions
                 hubConnection.KeepAliveInterval = TimeSpan.FromSeconds(300);
                 hubConnection.ServerTimeout = TimeSpan.FromSeconds(300);
 
-                Console.WriteLine("Hub Connection:");
                 Console.WriteLine(hubConnection.ToString());
 
                 return hubConnection;

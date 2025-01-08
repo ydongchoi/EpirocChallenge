@@ -37,16 +37,13 @@ app.UseHttpsRedirection();
 
 if (app.Environment.IsDevelopment())
 {
-    Console.WriteLine("Development environment detected");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-Console.WriteLine("Mapping SignalR Hub...");
 app.MapHub<VehicleDataHub>("/vehicleDataHub");
 app.MapControllers();
 
-Console.WriteLine("Application pipeline configured. Running...");
 app.Run();
 
 
