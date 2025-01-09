@@ -20,24 +20,25 @@ export const Indicator: FC<IndicatorProps> = ({ type, value, active = true }) =>
 
     return (
         <Box
-            display="flex"
-            justifyContent="center"
             alignItems="center"
-            p={1}
             borderRadius={1}
             color={active ? 'red' : 'gray'}
+            display="flex"
+            justifyContent="center"
+            p={1}
+            position={'fixed'}
         >
             <Icon
-            style={{
-                width: '30px',
-                height: '30px',
-                color: 'white',
-            }}
+                style={{
+                    width: '30px',
+                    height: '30px',
+                    color: 'white',
+                }}
             />
             {value !== undefined && (
-            <Typography variant="body1" style={{ marginLeft: '4px', color: 'white' }}>
-                {value}
-            </Typography>
+                <Typography variant="body1" style={{ marginLeft: '4px', color: 'white' }}>
+                    {value}
+                </Typography>
             )}
         </Box>
     )

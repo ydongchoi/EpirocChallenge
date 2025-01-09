@@ -6,6 +6,7 @@ import BatteryGauge from 'react-battery-gauge';
 import { Indicator } from './indicator';
 import { AppBar, Toolbar, Typography, Box, Grid, Slider, Card, CardContent, CardHeader, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { Battery, Cog, Menu as MenuIcon, Omega, PlugZap, Thermometer } from 'lucide-react';
+import { HubRounded } from '@mui/icons-material';
 
 const marks = [
   { value: -1, label: 'Off' },
@@ -20,17 +21,17 @@ function valuetext(value: number) {
   return `${value}`;
 }
 
-// const apiUrl = process.env.NODE_ENV === 'production' 
-// ? process.env.REACT_APP_VEHICLE_API_URL_PROD 
-// : process.env.REACT_APP_VEHICLE_API_URL_DEV;
+const apiUrl = process.env.NODE_ENV === 'production' 
+? process.env.REACT_APP_VEHICLE_API_URL_PROD 
+: process.env.REACT_APP_VEHICLE_API_URL_DEV;
 
-// const signalRUrl = process.env.NODE_ENV === 'production'
-// ? process.env.REACT_APP_VEHICLE_SIGNALR_URL_PROD
-// : process.env.REACT_APP_VEHICLE_SIGNALR_URL_DEV;
+const signalRUrl = process.env.NODE_ENV === 'production'
+? process.env.REACT_APP_VEHICLE_SIGNALR_URL_PROD
+: process.env.REACT_APP_VEHICLE_SIGNALR_URL_DEV;
 
 const requestCharging = async (isCharging: boolean) => {
   try {
-    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/charge-battery`, {
+    const response = await fetch(`${apiUrl}/charge-battery`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ isCharging }),
@@ -49,7 +50,7 @@ const requestCharging = async (isCharging: boolean) => {
 const requestSpeed = async (event: Event, speed: number) => {
   console.log('event' + event);
   try {
-    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/adjust-speed`, {
+    const response = await fetch(`${apiUrl}/adjust-speed`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ speed }),
@@ -79,7 +80,7 @@ const VehicleDataReceiver: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const newConnection = new HubConnectionBuilder()
-        .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`,
+        .withUrl(`${signalRUrl}`,
           {
             transport: HttpTransportType.WebSockets,
             skipNegotiation: false
@@ -125,13 +126,13 @@ const VehicleDataReceiver: React.FC = () => {
     <div>
       <AppBar position="static">
         <Toolbar style={{ display: 'flex', justifyContent: 'space-around' }}>
-          <Box display="flex" flexDirection="column" alignItems="center">
+          <Box alignItems="center" display="flex" flexDirection="column" justifyContent={'center'}>
             <Indicator type="circleParking" value={breakStatusMap[Number(messages?.breakData?.status ?? 0)]} />
           </Box>
-          <Box display="flex" flexDirection="column" alignItems="center">
+          <Box alignItems="center" display="flex" flexDirection="column" justifyContent={'center'}>
             <Indicator type="light" value={motorStatusMap[Number(messages?.motorData?.status ?? 0)]} />
           </Box>
-          <Box display="flex" flexDirection="column" alignItems="center">
+          <Box alignItems="center" display="flex" flexDirection="column" justifyContent={'center'}>
             <Indicator type="battery" value={batteryStatusMap[Number(messages?.batteryData?.status ?? 0)]} />
           </Box>
         </Toolbar>
