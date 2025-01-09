@@ -46,7 +46,7 @@ namespace MiningVehicle.VehicleEmulator.Components
             }
             if (Percentage < 0.01)
             {
-                Status = BatteryStatus.Off;
+                PowerOff();
                 _logger.LogWarning("Battery is empty and in off state");
             }
 
