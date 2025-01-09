@@ -39,15 +39,19 @@ namespace MiningVehicle.VehicleEmulator.Components
         // Methods
         public bool CheckBatteryStatus()
         {
-            if (Percentage < 0.2)
-            {
-                Status = BatteryStatus.Warning;
-                _logger.LogWarning("Battery is low and in warning state");
-            }
             if (Percentage < 0.01)
             {
                 PowerOff();
                 _logger.LogWarning("Battery is empty and in off state");
+          
+                return false;
+            }
+            else if (Percentage < 0.2)
+            {
+                Status = BatteryStatus.Warning;
+                _logger.LogWarning("Battery is low and in warning state");
+       
+                return true;
             }
 
             _logger.LogInformation("Battery is OK");
