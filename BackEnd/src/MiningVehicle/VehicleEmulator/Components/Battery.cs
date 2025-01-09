@@ -130,6 +130,7 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public void PowerOff()
         {
+            _logger.LogInformation("Battery is off");
             Status = BatteryStatus.Off;
             Power = 0;
         }

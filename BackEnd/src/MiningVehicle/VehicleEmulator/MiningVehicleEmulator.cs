@@ -19,8 +19,8 @@ namespace MiningVehicle.VehicleEmulator
         private System.Timers.Timer _timer;
 
         public MiningVehicleEmulator(
-            Battery battery, 
-            Motor motor, 
+            Battery battery,
+            Motor motor,
             IMiningVehicleClient miningVehicleClient,
             ILoggerManager logger)
         {
@@ -40,22 +40,40 @@ namespace MiningVehicle.VehicleEmulator
             _miningVehicleClient.ConnectAsync().Wait();
 
             _logger.LogInformation("Checking battery status...");
-            _battery.CheckBatteryStatus();
+            bool isBatteryOk = _battery.CheckBatteryStatus();
 
             _logger.LogInformation("Checking motor status...");
-            _motor.CheckMotorStatus(_motor.Rpm);
+            bool isMotorOk = _motor.CheckMotorStatus(_motor.Rpm);
 
-            _logger.LogInformation("Condition check passed, starting the engine...");
-            _motor.StartMotor();
+            if (isBatteryOk && isMotorOk)
+            {
+                _logger.LogInformation("Condition check passed, starting the engine...");
+                _motor.StartMotor();
+            }
+            else
+            {
+                _motor.StopMotor();
+
+                if (isBatteryOk == false)
+                {
+                    _logger.LogError("Battery is in fault state");
+                }
+                if (isMotorOk == false)
+                {
+                    _logger.LogError("Motor is in fault state");
+                }
+            }
 
             SendVehicleDataAsync().Wait();
         }
 
-        public void StopEngine()
+        public async Task StopEngine()
         {
             _logger.LogInformation("Stopping the engine...");
             _motor.StopMotor();
             _battery.PowerOff();
+
+            await SendVehicleDataAsync();
         }
 
         public async Task AdjustSpeed(int speed)
@@ -130,7 +148,7 @@ namespace MiningVehicle.VehicleEmulator
 
         private void OnTimedEvent(object? source, ElapsedEventArgs e)
         {
-            _miningVehicleClient.ConnectAsync();
+            _miningVehicleClient.ConnectAsync().Wait();
 
             if (_battery.Status == BatteryStatus.Charging)
             {
@@ -139,10 +157,26 @@ namespace MiningVehicle.VehicleEmulator
 
             if (_motor.Status == MotorStatus.Idle || _motor.Status == MotorStatus.Running)
             {
-                _battery.CheckBatteryStatus();
-                _motor.CheckMotorStatus(_motor.Rpm);
-                
-                AdjustSpeed(_speed).Wait();
+                bool isBatteryOk = _battery.CheckBatteryStatus();
+                bool isMotorOk = _motor.CheckMotorStatus(_motor.Rpm);
+
+                if (isBatteryOk && isMotorOk)
+                {
+                    AdjustSpeed(_speed).Wait();
+                }
+                else
+                {
+                    StopEngine();
+
+                    if (!isBatteryOk)
+                    {
+                        _logger.LogError("Battery is in fault state");
+                    }
+                    if (!isMotorOk)
+                    {
+                        _logger.LogError("Motor is in fault state");
+                    }
+                }
             }
         }
 

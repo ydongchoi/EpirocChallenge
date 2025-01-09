@@ -15,8 +15,8 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         // Properties
         public double GearRatio { get; private set; } // 1:6 (motor:wheel)
-        public int NominalPower { get; private set; } 
-        public int NominalTorque { get; private set; } 
+        public int NominalPower { get; private set; }
+        public int NominalTorque { get; private set; }
         public double Power { get; private set; }
         public int Rpm { get; private set; }
         public MotorStatus Status { get; private set; }
@@ -36,7 +36,7 @@ namespace MiningVehicle.VehicleEmulator.Components
 
         public Motor(
             IOptions<MotorConfiguration> motorConfigurationOption,
-            ILoggerManager logger, 
+            ILoggerManager logger,
             Battery battery)
         {
             _motorConfiguration = motorConfigurationOption.Value;
@@ -50,20 +50,26 @@ namespace MiningVehicle.VehicleEmulator.Components
             Status = MotorStatus.Off;
         }
 
-        public void CheckMotorStatus(int rpm)
+        public bool CheckMotorStatus(int rpm)
         {
             if (rpm < 0 || rpm > 800)
             {
-            Status = MotorStatus.Fault;
-            _logger.LogError("Motor is in fault state");
+                Status = MotorStatus.Fault;
+                _logger.LogError("Motor is in fault state");
+
+                return false;
             }
             else if (rpm > 600)
             {
-            WarnMotor();
+                WarnMotor();
+                
+                return true;
             }
             else
             {
-            _logger.LogInformation("Motor is OK");
+                _logger.LogInformation("Motor is OK");
+                
+                return true;
             }
         }
 
@@ -74,8 +80,8 @@ namespace MiningVehicle.VehicleEmulator.Components
         }
 
         public void AdjustSpeed(int speed)
-        {   
-            if (speed == -1) 
+        {
+            if (speed == -1)
             {
                 StopMotor();
                 return;
