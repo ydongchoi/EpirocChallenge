@@ -50,15 +50,21 @@ namespace MiningVehicle.VehicleEmulator.Components
             Status = MotorStatus.Off;
         }
 
-        public void CheckMotorStatus()
+        public void CheckMotorStatus(int rpm)
         {
-            if (Status == MotorStatus.Fault)
+            if (rpm < 0 || rpm > 800)
             {
-                _logger.LogError("Motor is in fault state");
-                throw new Exception("Motor is in fault state");
+            Status = MotorStatus.Fault;
+            _logger.LogError("Motor is in fault state");
             }
-
+            else if (rpm > 600)
+            {
+            WarnMotor();
+            }
+            else
+            {
             _logger.LogInformation("Motor is OK");
+            }
         }
 
         public void StartMotor()

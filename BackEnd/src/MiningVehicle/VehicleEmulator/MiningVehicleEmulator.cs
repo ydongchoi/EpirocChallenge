@@ -43,7 +43,7 @@ namespace MiningVehicle.VehicleEmulator
             _battery.CheckBatteryStatus();
 
             _logger.LogInformation("Checking motor status...");
-            _motor.CheckMotorStatus();
+            _motor.CheckMotorStatus(_motor.Rpm);
 
             _logger.LogInformation("Condition check passed, starting the engine...");
             _motor.StartMotor();
@@ -139,6 +139,9 @@ namespace MiningVehicle.VehicleEmulator
 
             if (_motor.Status == MotorStatus.Idle || _motor.Status == MotorStatus.Running)
             {
+                _battery.CheckBatteryStatus();
+                _motor.CheckMotorStatus(_motor.Rpm);
+                
                 AdjustSpeed(_speed).Wait();
             }
         }
