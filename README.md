@@ -24,6 +24,13 @@ The Epiroc Challenge project simulates vehicle data transmission and visualizati
 
 This flow ensures real-time data visualization and efficient data handling for the Epiroc Challenge project.
 
+## Diagram
+
+### Sequential Diagram
+
+![image](https://github.com/user-attachments/assets/2043d3d2-d978-4725-a142-cb0605a3e5d3)
+
+
 ## Specifications
 
 This specification is defined in the appsettings.json file.
