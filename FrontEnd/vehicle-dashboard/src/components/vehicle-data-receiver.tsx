@@ -67,6 +67,30 @@ const requestSpeed = async (event: Event, speed: number) => {
   }
 }
 
+const startConnection = async (connection: any) => {
+  await connection.start().then(() => {
+    console.log('Connection Started');
+  })
+  .catch((error: any) => {
+    console.error('Connection failed: ', error);
+    setTimeout(() => startConnection(connection), 5000);
+  });
+};
+
+const getVehicleData = (connection: any, setMessages: React.Dispatch<React.SetStateAction<VehicleData | undefined>>) => {
+  connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
+    console.log('Received message: ', message);
+    setMessages(message);
+  });
+};
+
+const sendPing = (connection: any) => {
+  connection.invoke('PingAsync').then(() =>
+    console.log('Ping sent'))
+  .catch((error: any) => 
+    console.error('Error sending ping: ', error));
+};
+
 const VehicleDataReceiver: React.FC = () => {
   const [messages, setMessages] = useState<VehicleData>();
   const [batteryStatus, setBatteryStatus] = useState<boolean>(false);
@@ -104,20 +128,13 @@ const VehicleDataReceiver: React.FC = () => {
 
   useEffect(() => {
     if (connection) {
-      connection.start()
-        .then(() => {
-          console.log('Connection started');
-        })
-        .catch((error: any) => console.error('Connection failed: ', error));
-
-      connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
-        connection.invoke('GetConnectionId').then((id: any) => {
-          console.log('ConnectionId: ', id);
-        });
-
-        console.log('Received message: ', message);
-        setMessages(message);
-      });
+      startConnection(connection);
+      
+      getVehicleData(connection, setMessages);
+      
+      setInterval(() => {
+        sendPing(connection);
+      }, 20000);
     }
   }, [connection]);
 
