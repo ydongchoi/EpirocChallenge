@@ -16,6 +16,31 @@ export const Indicator: FC<IndicatorProps> = ({ type, value, active = true }) =>
         power: Plug,
     }
 
+    const getColor = () => {
+        const colorMap: { [key: string]: { [key: string]: string } } = {
+            light: {
+                off: 'grey',
+                idle: 'blue',
+                running: 'green',
+                warning: 'orange',
+                fault: 'red',
+            },
+            battery: {
+                off: 'grey',
+                charging: 'green',
+                discharging: 'yellow',
+                warning: 'orange',
+                full: 'blue',
+            },
+            circleParking: {
+                off: 'grey',
+                on: 'green',
+            },
+        }
+
+        return colorMap[type]?.[value as string]
+    }
+
     const Icon = icons[type]
 
     return (
@@ -32,11 +57,11 @@ export const Indicator: FC<IndicatorProps> = ({ type, value, active = true }) =>
                 style={{
                     width: '30px',
                     height: '30px',
-                    color: 'white',
+                    color: getColor(),
                 }}
             />
             {value !== undefined && (
-                <Typography variant="body1" style={{ marginLeft: '4px', color: 'white' }}>
+                <Typography variant="body1" style={{ marginLeft: '4px', color: getColor() }}>
                     {value}
                 </Typography>
             )}
