@@ -32,16 +32,9 @@ namespace MiningVehicle.VehicleEmulator
         {
             if (_connection.State == HubConnectionState.Connected) return;
 
-            try
-            {
-                await _connection.StartAsync();
-                _logger.LogInformation("SignalR client connected.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error: {ex}");
-                throw;
-            }
+            // TODO: Try Catch
+            await _connection.StartAsync();
+            _logger.LogInformation("SignalR client connected.");
         }
 
         public async Task SendVehicleDataAsync(VehicleData vehicleData)
