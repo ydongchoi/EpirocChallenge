@@ -20,17 +20,17 @@ function valuetext(value: number) {
   return `${value}`;
 }
 
-const apiUrl = process.env.NODE_ENV === 'production' 
-? process.env.REACT_APP_VEHICLE_API_URL_PROD 
-: process.env.REACT_APP_VEHICLE_API_URL_DEV;
+// const apiUrl = process.env.NODE_ENV === 'production' 
+// ? process.env.REACT_APP_VEHICLE_API_URL_PROD 
+// : process.env.REACT_APP_VEHICLE_API_URL_DEV;
 
-const signalRUrl = process.env.NODE_ENV === 'production'
-? process.env.REACT_APP_VEHICLE_SIGNALR_URL_PROD
-: process.env.REACT_APP_VEHICLE_SIGNALR_URL_DEV;
+// const signalRUrl = process.env.NODE_ENV === 'production'
+// ? process.env.REACT_APP_VEHICLE_SIGNALR_URL_PROD
+// : process.env.REACT_APP_VEHICLE_SIGNALR_URL_DEV;
 
 const requestCharging = async (isCharging: boolean) => {
   try {
-    const response = await fetch(`${apiUrl}/charge-battery`, {
+    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/charge-battery`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ isCharging }),
@@ -49,7 +49,7 @@ const requestCharging = async (isCharging: boolean) => {
 const requestSpeed = async (event: Event, speed: number) => {
   console.log('event' + event);
   try {
-    const response = await fetch(`${apiUrl}/adjust-speed`, {
+    const response = await fetch(`https://mining-vehicle.azurewebsites.net/api/vehicle/adjust-speed`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ speed }),
@@ -79,7 +79,7 @@ const VehicleDataReceiver: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const newConnection = new HubConnectionBuilder()
-        .withUrl(`${signalRUrl}`,
+        .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`,
           {
             transport: HttpTransportType.WebSockets,
             skipNegotiation: false
