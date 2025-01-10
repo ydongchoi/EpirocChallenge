@@ -117,6 +117,7 @@ namespace MiningVehicle.VehicleEmulator
                 try
                 {
                     _connection.InvokeAsync("Ping").Wait();
+                    Console.WriteLine("Ping sent to server.");
                     _logger.LogInformation("Ping sent to server.");
                 }
                 catch (Exception ex)
