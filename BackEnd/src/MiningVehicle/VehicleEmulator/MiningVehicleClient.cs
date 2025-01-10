@@ -15,12 +15,12 @@ namespace MiningVehicle.VehicleEmulator
         private System.Timers.Timer _timer;
 
         public MiningVehicleClient(
-            HubConnection connection, 
-            IRepository vehicleDataRepository, 
+            HubConnection connection,
+            IRepository vehicleDataRepository,
             ILoggerManager logger)
         {
-            _connection = connection;            
-            _vehicleDataRepository = vehicleDataRepository;            
+            _connection = connection;
+            _vehicleDataRepository = vehicleDataRepository;
             _logger = logger;
             _vehicleData = new List<MiningVehicle.Infrastructure.Models.VehicleData>();
 
@@ -100,12 +100,12 @@ namespace MiningVehicle.VehicleEmulator
             };
 
             _vehicleData.Add(vehicleDataInfrastructure);
-         
+
             if (_vehicleData.Count > 50)
             {
                 await _vehicleDataRepository.AddVehicleDataAsync(_vehicleData);
                 _logger.LogInformation("Saved vehicle data to database...");
-               
+
                 _vehicleData.Clear();
             }
         }
@@ -114,18 +114,10 @@ namespace MiningVehicle.VehicleEmulator
         {
             if (_connection.State == HubConnectionState.Connected)
             {
-                try
-                {
-                    _connection.InvokeAsync("Ping").Wait();
-                    Console.WriteLine("Ping sent to server.");
-                    _logger.LogInformation("Ping sent to server.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Ping failed: {ex.Message}");
-                    _logger.LogError($"Ping failed: {ex.Message}");
-                    throw;
-                }
+                // TODO: Try Catch
+                _connection.InvokeAsync("Ping").Wait();
+                Console.WriteLine("Ping sent to server.");
+                _logger.LogInformation("Ping sent to server.");
             }
         }
     }
