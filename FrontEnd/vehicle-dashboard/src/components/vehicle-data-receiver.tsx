@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { HubConnectionBuilder, HttpTransportType, LogLevel } from '@microsoft/signalr';
-import { VehicleData } from '../models/vehicle-data.interface';
+import React, { useState } from 'react';
 import Gauge from './gauge';
 import BatteryGauge from 'react-battery-gauge';
 import { Indicator } from './indicator';
 import { AppBar, Toolbar, Typography, Box, Grid, Slider, Card, CardContent, CardHeader, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { Battery, Cog, Menu as MenuIcon, Omega, PlugZap, Thermometer } from 'lucide-react';
+import useSignalR  from '../hooks/useSignalR';
 
 const marks = [
   { value: -1, label: 'Off' },
@@ -77,66 +76,13 @@ const startConnection = async (connection: any) => {
   });
 };
 
-const getVehicleData = (connection: any, setMessages: React.Dispatch<React.SetStateAction<VehicleData | undefined>>) => {
-  connection.on('ReceiveVehicleDataAsync', (message: VehicleData) => {
-    console.log('Received message: ', message);
-    setMessages(message);
-  });
-};
-
-const sendPing = (connection: any) => {
-  connection.invoke('PingAsync').then(() =>
-    console.log('Ping sent'))
-  .catch((error: any) => 
-    console.error('Error sending ping: ', error));
-};
-
 const VehicleDataReceiver: React.FC = () => {
-  const [messages, setMessages] = useState<VehicleData>();
   const [batteryStatus, setBatteryStatus] = useState<boolean>(false);
-  const [connection, setConnection] = useState<any>(null);
+  const { messages } = useSignalR('https://mining-vehicle.azurewebsites.net/vehicleDataHub');
 
   const motorStatusMap = ['off', 'idle', 'running', 'warning', 'fault'];
   const batteryStatusMap = ['off', 'charging', 'discharging', 'warning', 'full'];
   const breakStatusMap = ['off', 'on'];
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const newConnection = new HubConnectionBuilder()
-        .withUrl(`https://mining-vehicle.azurewebsites.net/vehicleDataHub`,
-          {
-            transport: HttpTransportType.WebSockets,
-            skipNegotiation: false
-          }
-        )
-        .configureLogging(LogLevel.Information)
-        .withStatefulReconnect()
-        .build();
-
-      newConnection.serverTimeoutInMilliseconds = 300000;
-      newConnection.keepAliveIntervalInMilliseconds = 300000;
-
-      console.log('newConnection: ', newConnection);
-      console.log(newConnection.baseUrl);
-      console.log(newConnection.connectionId);
-
-      setConnection(newConnection);
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (connection) {
-      startConnection(connection);
-      
-      getVehicleData(connection, setMessages);
-      
-      setInterval(() => {
-        sendPing(connection);
-      }, 20000);
-    }
-  }, [connection]);
 
   return (
     <div>
