@@ -50,35 +50,6 @@ namespace MiningVehicle.VehicleEmulator.Components
             Status = MotorStatus.Off;
         }
 
-        public bool CheckMotorStatus(int rpm)
-        {
-            if (rpm < 0 || rpm > 800)
-            {
-                Status = MotorStatus.Fault;
-                _logger.LogError("Motor is in fault state");
-
-                return false;
-            }
-            else if (rpm > 600)
-            {
-                WarnMotor();
-                
-                return true;
-            }
-            else
-            {
-                _logger.LogInformation("Motor is OK");
-                
-                return true;
-            }
-        }
-
-        public void StartMotor()
-        {
-            Status = MotorStatus.Idle;
-            _logger.LogInformation("Starting motor...");
-        }
-
         public void AdjustSpeed(int speed)
         {
             if (speed == -1)
@@ -86,12 +57,6 @@ namespace MiningVehicle.VehicleEmulator.Components
                 StopMotor();
                 return;
             }
-
-            Status = speed switch
-            {
-                0 => MotorStatus.Idle,
-                _ => MotorStatus.Running
-            };
 
             Speed = speed;
 
@@ -107,11 +72,6 @@ namespace MiningVehicle.VehicleEmulator.Components
             }
         }
 
-        private int CalculateTargetRpm(int speed)
-        {
-            return 100 * (int)Math.Pow(2, speed - 1);
-        }
-
         private double CalculatePower()
         {
             if (Rpm == 0)
@@ -125,9 +85,49 @@ namespace MiningVehicle.VehicleEmulator.Components
             return Power;
         }
 
+        private int CalculateTargetRpm(int speed)
+        {
+            return 100 * (int)Math.Pow(2, speed - 1);
+        }
+
+        public bool CheckMotorStatus(int rpm)
+        {
+            if(rpm == 0){
+                Status = MotorStatus.Idle;
+                _logger.LogInformation("Motor is Idle");
+
+                return true;
+            }
+            if (500 < rpm && rpm < 800)
+            {
+                Status = MotorStatus.Warning;
+                _logger.LogWarning("Motor is in warning state");
+
+                return true;
+            }
+            if (rpm < 0 || rpm > 800)
+            {
+                Status = MotorStatus.Fault;
+                _logger.LogError("Motor is in fault state");
+
+                return false;
+            }
+            
+            Status = MotorStatus.Running;
+            _logger.LogInformation("Motor is OK");            
+            
+            return true;
+        }
+
         private double Lerp(double current, double target, double t)
         {
             return current + (target - current) * t * 3;
+        }
+
+        public void StartMotor()
+        {
+            Status = MotorStatus.Idle;
+            _logger.LogInformation("Starting motor...");
         }
 
         public void StopMotor()
@@ -135,12 +135,6 @@ namespace MiningVehicle.VehicleEmulator.Components
             Rpm = 0;
             Status = MotorStatus.Off;
             _logger.LogInformation("Motor stopped");
-        }
-
-        private void WarnMotor()
-        {
-            Status = MotorStatus.Warning;
-            _logger.LogWarning("Motor is in warning state");
         }
     }
 
