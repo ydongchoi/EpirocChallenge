@@ -122,6 +122,7 @@ namespace MiningVehicle.VehicleEmulator
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine($"Ping failed: {ex.Message}");
                     _logger.LogError($"Ping failed: {ex.Message}");
                     throw;
                 }
