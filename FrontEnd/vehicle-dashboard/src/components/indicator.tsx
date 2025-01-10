@@ -19,22 +19,22 @@ export const Indicator: FC<IndicatorProps> = ({ type, value, active = true }) =>
     const getColor = () => {
         const colorMap: { [key: string]: { [key: string]: string } } = {
             light: {
-                off: 'grey',
-                idle: 'blue',
-                running: 'green',
-                warning: 'orange',
-                fault: 'red',
+            off: '#B0BEC5', // grey
+            idle: '#42A5F5', // blue
+            running: '#66BB6A', // green
+            warning: '#FFCA28', // orange
+            fault: '#EF5350', // red
             },
             battery: {
-                off: 'grey',
-                charging: 'green',
-                discharging: 'yellow',
-                warning: 'orange',
-                full: 'blue',
+            off: '#B0BEC5', // grey
+            charging: '#66BB6A', // green
+            discharging: '#FFEB3B', // yellow
+            warning: '#FFCA28', // orange
+            full: '#42A5F5', // blue
             },
             circleParking: {
-                off: 'grey',
-                on: 'green',
+            off: '#B0BEC5', // grey
+            on: '#66BB6A', // green
             },
         }
 
