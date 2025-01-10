@@ -26,6 +26,9 @@ namespace MiningVehicle.VehicleEmulator
 
             _timer = new System.Timers.Timer(20000);
             _timer.Elapsed += OnTimedEvent;
+
+            Console.WriteLine("Timer started.");
+            _timer.Start();
         }
 
         public async Task ConnectAsync()
@@ -105,11 +108,13 @@ namespace MiningVehicle.VehicleEmulator
 
         private void OnTimedEvent(object? source, ElapsedEventArgs e)
         {
+            Console.WriteLine("Timer event triggered.");    
             if (_connection.State == HubConnectionState.Connected)
             {
                 // TODO: Try Catch
-                _connection.InvokeAsync("Ping").Wait();
                 Console.WriteLine("Ping sent to server.");
+
+                _connection.InvokeAsync("Ping").Wait();
                 _logger.LogInformation("Ping sent to server.");
             }
         }

@@ -74,6 +74,7 @@ namespace MiningVehicle.SignalR.VehicleHub
 
         public Task Ping()
         {
+            Console.WriteLine($"Ping received from client with ConnectionId");
             _logger.LogInformation($"Ping received from client with ConnectionId: {Context.ConnectionId}");
             return Task.CompletedTask;
         }

@@ -32,12 +32,13 @@ namespace MiningVehicle.VehicleEmulator
 
             _timer = new System.Timers.Timer(100);
             _timer.Elapsed += OnTimedEvent;
+            
+            Console.WriteLine("Timer started.");
+            _timer.Start();
         }
 
         public async Task StartEngineAsync()
-        {
-            _timer.Start();
-            
+        {            
             _miningVehicleClient.ConnectAsync().Wait();
 
             bool isVehicleConditonOk = CheckMotorAndBatteryStatus();
