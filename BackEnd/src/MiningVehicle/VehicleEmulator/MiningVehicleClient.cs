@@ -24,7 +24,7 @@ namespace MiningVehicle.VehicleEmulator
             _logger = logger;
             _vehicleData = new List<MiningVehicle.Infrastructure.Models.VehicleData>();
 
-            _timer = new System.Timers.Timer(250000);
+            _timer = new System.Timers.Timer(20000);
             _timer.Elapsed += OnTimedEvent;
         }
 
