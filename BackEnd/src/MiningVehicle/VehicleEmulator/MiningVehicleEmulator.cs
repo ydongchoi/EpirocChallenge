@@ -94,7 +94,6 @@ namespace MiningVehicle.VehicleEmulator
         public async Task ChargeBatteryAsync()
         {
             _logger.LogInformation("Charging battery...");
-            StopEngineAsync().Wait();
             _battery.ChargeBattery();
 
             await SendVehicleDataAsync();

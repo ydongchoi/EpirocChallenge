@@ -34,6 +34,8 @@ namespace MiningVehicle.API.Services
 
         public async Task ChargeBatteryAsync()
         {
+            await _miningVehicleEmulator.StopEngineAsync();
+            
             await _miningVehicleEmulator.ChargeBatteryAsync();
         }
 
