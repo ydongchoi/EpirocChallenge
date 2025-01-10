@@ -1,13 +1,13 @@
 namespace MiningVehicle.VehicleEmulator
 {
     public interface IMiningVehicleEmulator{
-        public void StartEngine();
-        public Task StopEngine();
+        public Task StartEngineAsync();
+        public Task StopEngineAsync();
 
-        public Task AdjustSpeed(int speed);
-        public void Break();
+        public Task AdjustSpeedAsync(int speed);
+        public Task BreakAsync();
         
-        public Task ChargeBattery();
-        public Task StopBatteryCharging();
+        public Task ChargeBatteryAsync();
+        public Task StopBatteryChargingAsync();
     }
 }

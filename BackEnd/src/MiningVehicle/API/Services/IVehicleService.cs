@@ -2,9 +2,9 @@ namespace MiningVehicle.API.Services
 {
     public interface IVehicleService
     {
-        Task AdjustSpeed(int speed);
-        void Break();
-        void ChargeBattery();
-        void StopBatteryCharging();
+        Task AdjustSpeedAsync(int speed);
+        Task BreakAsync();
+        Task ChargeBatteryAsync();
+        Task StopBatteryChargingAsync();
     }
 }

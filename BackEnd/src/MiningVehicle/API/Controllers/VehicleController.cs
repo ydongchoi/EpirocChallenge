@@ -25,7 +25,7 @@ namespace MiningVehicle.API.Controllers
 
             try
             {
-                await _vehicleService.AdjustSpeed(adjustSpeedDTO.Speed);
+                await _vehicleService.AdjustSpeedAsync(adjustSpeedDTO.Speed);
                 return Ok($"Speed adjusted to {adjustSpeedDTO.Speed}");
             }
             catch (Exception ex)
@@ -35,11 +35,11 @@ namespace MiningVehicle.API.Controllers
         }
 
         [HttpPost("break")]
-        public IActionResult Break()
+        public async Task<IActionResult> Break()
         {
             try
             {
-                _vehicleService.Break();
+                await _vehicleService.BreakAsync();
                 return Ok("Vehicle break applied.");
             }
             catch (Exception ex)
@@ -49,7 +49,7 @@ namespace MiningVehicle.API.Controllers
         }
 
         [HttpPost("charge-battery")]
-        public IActionResult ChargeBattery([FromBody] ChargeBatteryDTO chargeBatteryDTO)
+        public async Task<IActionResult> ChargeBattery([FromBody] ChargeBatteryDTO chargeBatteryDTO)
         {
             if (chargeBatteryDTO == null)
             {
@@ -60,11 +60,11 @@ namespace MiningVehicle.API.Controllers
             {
                 if (chargeBatteryDTO.IsCharging)
                 {
-                    _vehicleService.ChargeBattery();
+                    await _vehicleService.ChargeBatteryAsync();
                 }
                 else
                 {
-                    _vehicleService.StopBatteryCharging();
+                    await _vehicleService.StopBatteryChargingAsync();
                 }
 
                 return Ok("Battery charging status changed.");

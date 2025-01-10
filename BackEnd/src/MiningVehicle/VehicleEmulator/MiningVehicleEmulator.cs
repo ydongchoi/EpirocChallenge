@@ -34,40 +34,28 @@ namespace MiningVehicle.VehicleEmulator
             _timer.Elapsed += OnTimedEvent;
         }
 
-        public void StartEngine()
+        public async Task StartEngineAsync()
         {
             _timer.Start();
+            
             _miningVehicleClient.ConnectAsync().Wait();
 
-            _logger.LogInformation("Checking battery status...");
-            bool isBatteryOk = _battery.CheckBatteryStatus();
-
-            _logger.LogInformation("Checking motor status...");
-            bool isMotorOk = _motor.CheckMotorStatus(_motor.Rpm);
-
-            if (isBatteryOk && isMotorOk)
+            bool isVehicleConditonOk = CheckMotorAndBatteryStatus();
+            if (!isVehicleConditonOk)
             {
-                _logger.LogInformation("Condition check passed, starting the engine...");
-                _motor.StartMotor();
-            }
-            else
-            {
-                _motor.StopMotor();
+                _logger.LogError("Vehicle condition is not OK. Engine cannot be started.");
+                await StopEngineAsync();
 
-                if (isBatteryOk == false)
-                {
-                    _logger.LogError("Battery is in fault state");
-                }
-                if (isMotorOk == false)
-                {
-                    _logger.LogError("Motor is in fault state");
-                }
+                return;
             }
+
+            _logger.LogInformation("Starting the engine...");
+            _motor.StartMotor();
 
             SendVehicleDataAsync().Wait();
         }
 
-        public async Task StopEngine()
+        public async Task StopEngineAsync()
         {
             _logger.LogInformation("Stopping the engine...");
             _motor.StopMotor();
@@ -76,33 +64,68 @@ namespace MiningVehicle.VehicleEmulator
             await SendVehicleDataAsync();
         }
 
-        public async Task AdjustSpeed(int speed)
+        public async Task AdjustSpeedAsync(int speed)
         {
-            if (_motor.Status == MotorStatus.Off) StartEngine();
+            if (_motor.Status == MotorStatus.Off) await StartEngineAsync();
+
+            bool isVehicleConditonOk = CheckMotorAndBatteryStatus();   
+            if (!isVehicleConditonOk)
+            {
+                _logger.LogError("Vehicle condition is not OK. Engine cannot be started.");
+
+                await StopEngineAsync();
+                return;
+            }
 
             _logger.LogInformation($"Adjusting speed to {speed}...");
+
             _speed = speed;
             _motor.AdjustSpeed(speed);
-            _battery.CheckCurrentBattery();
 
             await SendVehicleDataAsync();
         }
 
-        public void Break()
+        public async Task BreakAsync()
         {
             _logger.LogInformation("Breaking...");
             _motor.StopMotor();
         }
 
-        public async Task ChargeBattery()
+        public async Task ChargeBatteryAsync()
         {
             _logger.LogInformation("Charging battery...");
+            StopEngineAsync().Wait();
             _battery.ChargeBattery();
 
             await SendVehicleDataAsync();
         }
 
-        public async Task StopBatteryCharging()
+        public bool CheckMotorAndBatteryStatus()
+        {
+            _logger.LogInformation("Checking motor and battery status...");
+
+            bool isBatteryOk = _battery.CheckBatteryStatus();
+            bool isMotorOk = _motor.CheckMotorStatus(_motor.Rpm);
+
+            if (isBatteryOk && isMotorOk)
+            {
+                _logger.LogInformation("Motor and battery are OK");
+                return true;
+            }
+
+            if (!isBatteryOk)
+            {
+                _logger.LogError("Battery is in fault state");
+            }
+            if (!isMotorOk)
+            {
+                _logger.LogError("Motor is in fault state");
+            }
+
+            return false;
+        }
+
+        public async Task StopBatteryChargingAsync()
         {
             _logger.LogInformation("Stopping battery charging...");
             _battery.PowerOff();
@@ -152,31 +175,11 @@ namespace MiningVehicle.VehicleEmulator
 
             if (_battery.Status == BatteryStatus.Charging)
             {
-                ChargeBattery().Wait();
+                ChargeBatteryAsync().Wait();
             }
-
-            if (_motor.Status == MotorStatus.Idle || _motor.Status == MotorStatus.Running)
+            else if (_motor.Status == MotorStatus.Idle || _motor.Status == MotorStatus.Running || _motor.Status == MotorStatus.Warning)
             {
-                bool isBatteryOk = _battery.CheckBatteryStatus();
-                bool isMotorOk = _motor.CheckMotorStatus(_motor.Rpm);
-
-                if (isBatteryOk && isMotorOk)
-                {
-                    AdjustSpeed(_speed).Wait();
-                }
-                else
-                {
-                    StopEngine();
-
-                    if (!isBatteryOk)
-                    {
-                        _logger.LogError("Battery is in fault state");
-                    }
-                    if (!isMotorOk)
-                    {
-                        _logger.LogError("Motor is in fault state");
-                    }
-                }
+                AdjustSpeedAsync(_speed).Wait();
             }
         }
 

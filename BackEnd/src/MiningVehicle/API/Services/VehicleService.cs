@@ -11,36 +11,35 @@ namespace MiningVehicle.API.Services
             _miningVehicleEmulator = miningVehicleEmulator;
         }
 
-        public async Task AdjustSpeed(int speed)
+        public async Task AdjustSpeedAsync(int speed)
         {
             switch (speed)
             {
                 // TODO : Refactor this to use an enum
                 case -1:
-                    _miningVehicleEmulator.StopEngine();
-                    break;
+                    await _miningVehicleEmulator.StopEngineAsync();
+                    return;
                 case 0:
-                    _miningVehicleEmulator.StartEngine();
-                    break;
+                    await _miningVehicleEmulator.StartEngineAsync();
+                    break;  
             }
 
-            await _miningVehicleEmulator.AdjustSpeed(speed);
+            await _miningVehicleEmulator.AdjustSpeedAsync(speed);
         }
 
-        public void Break()
+        public async Task BreakAsync()
         {
-            _miningVehicleEmulator.Break();
+            await _miningVehicleEmulator.BreakAsync();
         }
 
-        public void ChargeBattery()
+        public async Task ChargeBatteryAsync()
         {
-            _miningVehicleEmulator.StopEngine();
-            _miningVehicleEmulator.ChargeBattery();
+            await _miningVehicleEmulator.ChargeBatteryAsync();
         }
 
-        public void StopBatteryCharging()
+        public async Task StopBatteryChargingAsync()
         {
-            _miningVehicleEmulator.StopBatteryCharging();
+            await _miningVehicleEmulator.StopBatteryChargingAsync();
         }
     }
 }
