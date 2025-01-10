@@ -35,7 +35,7 @@ const useSignalR = (hubUrl: string): { messages: VehicleData | undefined } => {
                     });
 
                     setInterval(() => {
-                        connection.invoke('PingAsync').then(() => 
+                        connection.invoke('Ping').then(() => 
                             console.log('Ping sent')
                         );
                     }, 20000);
