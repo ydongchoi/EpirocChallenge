@@ -2,14 +2,14 @@ using Microsoft.AspNetCore.SignalR;
 using MiningVehicle.Infrastructure.Repositories;
 using MiningVehicle.Logger;
 using MiningVehicle.SignalR.VehicleHub.Models;
-
+using System;
+using System.Threading.Tasks;
 
 namespace MiningVehicle.SignalR.VehicleHub
 {
     public class VehicleDataHub : Hub
     {
         private readonly IRepository _vehicleDataRepository;
-
         private readonly ILoggerManager _logger;
 
         public VehicleDataHub(
@@ -24,12 +24,20 @@ namespace MiningVehicle.SignalR.VehicleHub
 
         public async Task SendVehicleDataAsync(VehicleData vehicleData)
         {
-            LogVehicleData(vehicleData);
+            try
+            {
+                LogVehicleData(vehicleData);
 
-            await SendVehicleDataToUIAsync(vehicleData);
+                await SendVehicleDataToUIAsync(vehicleData);
 
-            await Clients.Caller.SendAsync("ReceiveVehicleData", vehicleData);
-            _logger.LogInformation("Sent vehicle data to caller...");
+                await Clients.Caller.SendAsync("ReceiveVehicleData", vehicleData);
+                _logger.LogInformation($"Sent vehicle data to caller with ConnectionId: {Context.ConnectionId}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in SendVehicleDataAsync: {ex.Message}");
+                throw;
+            }
         }
 
         private void LogVehicleData(VehicleData vehicleData)
@@ -52,13 +60,21 @@ namespace MiningVehicle.SignalR.VehicleHub
 
         public async Task SendVehicleDataToUIAsync(VehicleData vehicleData)
         {
-            await Clients.All.SendAsync("ReceiveVehicleDataAsync", vehicleData);
-            _logger.LogInformation("Sent vehicle data to UI...");
+            try
+            {
+                await Clients.All.SendAsync("ReceiveVehicleDataAsync", vehicleData);
+                _logger.LogInformation("Sent vehicle data to UI...");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error in SendVehicleDataToUIAsync: {ex.Message}");
+                throw;
+            }
         }
 
-        public Task Ping()
+        public Task PingAsync()
         {
-            _logger.LogInformation("Ping received from client...");
+            _logger.LogInformation($"Ping received from client with ConnectionId: {Context.ConnectionId}");
             return Task.CompletedTask;
         }
     }
