@@ -40,6 +40,7 @@ namespace MiningVehicle.VehicleEmulator
             catch (Exception ex)
             {
                 _logger.LogError($"Error: {ex}");
+                throw;
             }
         }
 
@@ -59,6 +60,7 @@ namespace MiningVehicle.VehicleEmulator
             catch (Exception ex)
             {
                 _logger.LogError($"Error: {ex}");
+                throw;
             }
         }
 
@@ -120,6 +122,7 @@ namespace MiningVehicle.VehicleEmulator
                 catch (Exception ex)
                 {
                     _logger.LogError($"Ping failed: {ex.Message}");
+                    throw;
                 }
             }
         }
