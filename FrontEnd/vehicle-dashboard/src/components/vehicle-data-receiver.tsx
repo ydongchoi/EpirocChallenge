@@ -6,7 +6,6 @@ import BatteryGauge from 'react-battery-gauge';
 import { Indicator } from './indicator';
 import { AppBar, Toolbar, Typography, Box, Grid, Slider, Card, CardContent, CardHeader, BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { Battery, Cog, Menu as MenuIcon, Omega, PlugZap, Thermometer } from 'lucide-react';
-import { HubRounded } from '@mui/icons-material';
 
 const marks = [
   { value: -1, label: 'Off' },
