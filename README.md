@@ -28,7 +28,7 @@ This flow ensures real-time data visualization and efficient data handling for t
 
 ### Sequential Diagram
 
-![image](https://github.com/user-attachments/assets/cccbba6f-f0b7-454c-ac15-2b80c1912835)
+![image](https://github.com/user-attachments/assets/a16c64ef-dcf1-4a01-93d4-d1b6299ee6c6)
 
 
 ## Specifications
