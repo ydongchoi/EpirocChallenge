@@ -109,6 +109,14 @@ namespace MiningVehicle.VehicleEmulator
         private void OnTimedEvent(object? source, ElapsedEventArgs e)
         {
             Console.WriteLine("Timer event triggered.");    
+            if (_connection.State == HubConnectionState.Connected)
+            {
+                // TODO: Try Catch
+                Console.WriteLine("Ping sent to server.");
+
+                _connection.InvokeAsync("Ping").Wait();
+                _logger.LogInformation("Ping sent to server.");
+            }
         }
     }
 }
