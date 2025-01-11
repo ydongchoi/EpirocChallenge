@@ -42,19 +42,18 @@ namespace MiningVehicle.Extensions
             services.AddSingleton<HubConnection>(provider =>
             {
                 var hubUrl = GetHubUrl();
-                Console.WriteLine($"Hub URL: {hubUrl}");
-
+             
                 var hubConnection = new HubConnectionBuilder()
                     .WithUrl(hubUrl, options =>
                     {
-                        options.Transports = HttpTransportType.WebSockets;
                         options.SkipNegotiation = false;
+                        options.Transports = HttpTransportType.WebSockets;
                     })
                     .WithStatefulReconnect()
                     .Build();
 
-                hubConnection.KeepAliveInterval = TimeSpan.FromSeconds(300);
-                hubConnection.ServerTimeout = TimeSpan.FromSeconds(300);
+                hubConnection.KeepAliveInterval = TimeSpan.FromSeconds(30);
+                hubConnection.ServerTimeout = TimeSpan.FromSeconds(40);
 
                 Console.WriteLine(hubConnection.ToString());
 

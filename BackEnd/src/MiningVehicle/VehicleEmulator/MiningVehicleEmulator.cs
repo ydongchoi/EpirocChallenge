@@ -28,6 +28,7 @@ namespace MiningVehicle.VehicleEmulator
             _motor = motor ?? throw new ArgumentNullException(nameof(motor));
 
             _miningVehicleClient = miningVehicleClient ?? throw new ArgumentNullException(nameof(miningVehicleClient));
+            
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             _timer = new System.Timers.Timer(100);
